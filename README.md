@@ -3,14 +3,16 @@
 ## To do:
 
 **Order Hardware**
-- [ ] Seek engineering advice
-- [ ] Arduino board
-- [ ] Motor controller
-- [ ] Distance sensor
+- [x] Seek engineering advice
+- [x] Arduino board (Arduino UNO ATMEGA328P R3 **€ 26.98**)
+- [x] Distance sensor (HC-SR04 Ultrasonic Sensor **€ 4.49**)
+- [x] AWG Jumper Wires (HC-SR04 Ultrasonic Sensor **€ 4.95**)
 - [ ] Bluetooth slave
-- [ ] Prototyping board and cables
-- [ ] USB cable
-- [ ] Vehicle kit
+- [x] Battery holder (**€ 1.29**)
+- [x] Prototyping board (**€ 5.95**)
+- [x] USB cable
+- [x] Motor controller (Arduino Motor Shield R3 **€ 44.00**)
+- [x] Vehicle kit (Magician Chassis **€ 44.00**)
 
 **Software**
 - [ ] Learn C++
