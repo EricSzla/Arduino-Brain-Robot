@@ -19,3 +19,8 @@
 - [ ] Program motor controller
 - [ ] Add bluetooth
 - [ ] Program remote control using Android App
+
+## Useful resources:
+**Arduino Library:** https://www.arduino.cc/en/Reference/HomePage</br>
+**Getting Started with Arduino:** https://www.arduino.cc/en/Guide/HomePage</br>
+**New Ping Library:** https://bitbucket.org/teckel12/arduino-new-ping/wiki/Home (For Distance Sensor)
