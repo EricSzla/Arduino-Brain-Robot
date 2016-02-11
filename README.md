@@ -1,5 +1,6 @@
 ![title](https://cloud.githubusercontent.com/assets/15609881/12981660/82bf5158-d0d9-11e5-8ef1-ccd10aa02157.png)
 
+Hello 
 ### Members:
 **Name:** Pamela Sabio</br>
 **Student number:** C14484542 DT282/2</br>
@@ -21,7 +22,7 @@
 **Arduino Library:** https://www.arduino.cc/en/Reference/HomePage</br>
 **Getting Started with Arduino:** https://www.arduino.cc/en/Guide/HomePage</br>
 **New Ping Library:** https://bitbucket.org/teckel12/arduino-new-ping/wiki/Home (For Distance Sensor)
-
+       
 ### To do:
 - [x] Order Hardware
 - [ ] Learn C++
