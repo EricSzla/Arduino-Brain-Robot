@@ -1,6 +1,5 @@
 ![title](https://cloud.githubusercontent.com/assets/15609881/12981660/82bf5158-d0d9-11e5-8ef1-ccd10aa02157.png)
 
-Hello 
 ### Members:
 **Name:** Pamela Sabio</br>
 **Student number:** C14484542 DT282/2</br>
@@ -15,6 +14,7 @@ Hello
 * [Resources](#useful-resources)</br>
 * [To do](#to-do)</br>
 * [Section 1: Hardware](#section-1:-hardware) </br>
+* [Section 2: Assembly](#section-2:-assembly)</br>
 
 ### Objective:
 
@@ -69,7 +69,10 @@ Hello
 
 ![Motor Controller](https://www.arduino.cc/en/uploads/Main/MotorShield_R3_Front_450px.jpg)
 
+
 **Vehicle kit (Magician Chassis € 44.00**)
 - The base for the robot, which includes motors and wheels, supports the rest of hardware, compiled together forms a fully operational robot.
 
 ![vehicle](https://cdn.sparkfun.com//assets/parts/5/8/2/3/10825-04.jpg)
+
+# Section 2: Assembly
