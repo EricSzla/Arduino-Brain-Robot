@@ -25,12 +25,12 @@
        
 ### To do:
 - [x] Order Hardware
-- [ ] Learn C++
-- [ ] Program arduino board
-- [ ] Program distance sensor
-- [ ] Program motor controller
-- [ ] Add bluetooth
-- [ ] Program android remote controll via bluetooth
+- [x] Learn C++
+- [x] Program arduino board
+- [] Program distance sensor
+- [] Program motor controller
+- [x] Add bluetooth
+- [] Program android remote controll via bluetooth
 
 
 # Section 1: Hardware
