@@ -12,7 +12,8 @@ public class Main extends PApplet {
     // For Arduino connection
     Serial myPort;
     PImage erpam;
-
+	int x = 0;
+	
     public void settings()
     {
         size(700, 500);

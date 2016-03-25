@@ -39,6 +39,24 @@ public class RemoteControl{
         this.turningSlider.setPosition(150,370).setWidth(400).setRange(255,0).setValue(128).setSliderMode(Slider.FLEXIBLE).setLabelVisible(false).hide();
     }
 
+    public void render(char gear)
+    {
+        papplet.background(0);
+        leftMotorSlider.show();
+        rightMotorSlider.show();
+        turningSlider.show();
+        papplet.textSize(24);
+        papplet.textAlign(papplet.CENTER);
+        papplet.text("Gear: " + gear, papplet.width/2,papplet.height/2);
+    }
 
+    public void update(float speed, float leftspeed)
+    {
+        // Update controls
+        rightMotorSlider.setValue(papplet.map(speed,0,200,0,255));
+        leftMotorSlider.setValue(papplet.map(leftspeed,0,170,0,255));
+        //turningSlider.setValue();
+
+    }
 
 }
