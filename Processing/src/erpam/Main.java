@@ -1,62 +1,62 @@
-package ie.dit;
+package erpam;
 import processing.core.*;
-import controlP5.*;
+import processing.core.PImage;
+import processing.serial.*;
 
 /**
- * Created by Eryk Szlachetka and Pamela Sabio on 19/03/2016.
- */
+ * Created by Eryk Szlachetka and Pamela Sabio on 14/03/2016.
+ **/
 
-public class RemoteControl{
+public class Main extends PApplet {
 
-    // Declare Variables
-    PApplet papplet;
-    ControlP5 cp5;
-    Slider leftMotorSlider;
-    Slider rightMotorSlider;
-    Slider turningSlider;
+    // For Arduino connection
+    Serial myPort;
+    PImage erpam;
 
-    // Constructor
-    RemoteControl(PApplet papplet) {
-
-        this.papplet = papplet;
-        this.cp5 = new ControlP5(this.papplet); // Iniliatilze new control p5
-
-        // Add motorSliders to cp5
-        this.leftMotorSlider = cp5.addSlider("LeftMotor");
-        this.rightMotorSlider = cp5.addSlider("RightMotor");
-        this.turningSlider = cp5.addSlider("Turning");
-
-        // Initialize the sliders
-        initialize();
-    }
-
-
-    public void initialize()
+    public void settings()
     {
-        // Sets sliders position, size, range and hides it
-        this.leftMotorSlider.setPosition(papplet.width/10-20,papplet.height- (papplet.height/4)).setSize(20,100).setRange(0,255).hide();
-        this.rightMotorSlider.setPosition(papplet.width-papplet.width/10,papplet.height- (papplet.height/4)).setSize(20,100).setRange(0,255).hide();
-        this.turningSlider.setPosition(150,370).setWidth(400).setRange(255,0).setValue(128).setSliderMode(Slider.FLEXIBLE).setLabelVisible(false).hide();
+        size(700, 500);
     }
 
-    public void render(char gear)
+    public void setup()
     {
-        papplet.background(0);
-        leftMotorSlider.show();
-        rightMotorSlider.show();
-        turningSlider.show();
-        papplet.textSize(24);
-        papplet.textAlign(papplet.CENTER);
-        papplet.text("Gear: " + gear, papplet.width/2,papplet.height/2);
+        printArray(Serial.list()); // Prints the serial lists
+
+        // Start the Bluetooth port
+        String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
+        myPort = new Serial(this, portName, 9600); // Initialize myPort and set the bit rate
+
+        frameRate(60);
+        erpam = loadImage("erpam.png");
+
     }
 
-    public void update(float speed, float leftspeed)
+    public void draw()
     {
-        // Update controls
-        rightMotorSlider.setValue(papplet.map(speed,0,200,0,255));
-        leftMotorSlider.setValue(papplet.map(leftspeed,0,170,0,255));
-        //turningSlider.setValue();
 
     }
 
+    public void menu()
+    {
+        background(0);
+        //image(trailer,0,0,width,height);
+        image(erpam, 0, 0);
+
+        if (x < width/6)
+        {
+            x+=10;
+        }
+
+        fill(255);
+        text("---> TERRITORY MAPPING", x, height/3);
+
+    }
+
+    public static void main(String[] args)
+    {
+        PApplet.main(Main.class.getName());
+        /*String[] a = {"MAIN"};
+        PApplet.runSketch( a, new Main());*/
+    }
 }
+
