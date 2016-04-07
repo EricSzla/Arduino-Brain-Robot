@@ -68,8 +68,7 @@ public class Main extends PApplet {
 
     public void draw()
     {
-        switch(choice)
-        {
+        switch (choice) {
             case 0:
                 menu();
                 break;
@@ -77,12 +76,14 @@ public class Main extends PApplet {
                 BT.render(currentGear);
                 break;
             case 2:
-                //mapping();
+                //ai()
+                break;
+            case 3:
+                //headSet()
                 break;
             default:
                 menu();
         }
-
     }
 
     public void mouseClicked()
@@ -132,6 +133,27 @@ public class Main extends PApplet {
 
     }
 
+    public void turning(char value) {
+        if (value == 'A') {
+            if (rightspeed >= 0 && leftspeed >= 50) {
+                rightspeed = 220;
+                //rightspeed = 200;
+                leftspeed -= 50;
+            } else if (rightspeed < 0 && leftspeed < 0) {
+                rightspeed = -200;
+                leftspeed += 50;
+            }
+        } else if (value == 'D') {
+            if (rightspeed >= 50 && leftspeed >= 0) {
+                //leftspeed = 170;
+                leftspeed = 200;
+                rightspeed -= 50;
+            } else if (rightspeed < 0 && leftspeed < 0) {
+                leftspeed = -190;
+                rightspeed += 50;
+            }
+        }
+    }
 
     public void acceleration(char value) {
         if (value == 'W') // Go forward
