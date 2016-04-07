@@ -65,7 +65,6 @@ public class Main extends PApplet {
         headSet = new HeadSet(this);
     }
 
-
     public void draw() {
         switch (choice) {
             case 0:
@@ -83,11 +82,14 @@ public class Main extends PApplet {
             default:
                 menu();
         }
+
     }
 
     public void mouseClicked() {
         // To be completed
         choice = 1;
+        //choice = 2;
+        //choice = 3;
     }
 
     public void menu() {
@@ -111,9 +113,9 @@ public class Main extends PApplet {
             } else if (keyCode == 'S') {
                 acceleration('S');
             } else if (keyCode == 'A') {
-                //turning('A');
+                turning('A');
             } else if (keyCode == 'D') {
-                //turning('D');
+                turning('D');
 
             } else {
                 leftspeed = 0;
@@ -180,10 +182,22 @@ public class Main extends PApplet {
         }
     }
 
+    public void movieEvent(Movie m) {
+        m.read();
+    }
+
+    public static void main(String[] args) {
+        PApplet.main(Main.class.getName());
+    }
+
+
     // Use this code if HeadSet connected
 
     public void oscEvent(OscMessage msg) {
         if (choice == 1) {
+
+            // if(frameCount % 20 == 0) {
+
 
             if (msg.checkAddrPattern("/muse/elements/experimental/concentration") == true) {
                 cVar = msg.get(0).floatValue();
@@ -191,69 +205,49 @@ public class Main extends PApplet {
                 //System.out.println("checkC: " + checkC);
 
                 System.out.println("cVar: " + cVar);
+                    /*if((checkC > 0.5 && cVar < 0.5) || (checkC < 0.5 && cVar > 0.5))
+                    {
+                        passVar1 = "3C" + cVar + ",";
+                        //headSet.pass(myPort, passVar, passVar1);
+                        checkC = cVar;
+
+                    }*/
             }
-        }
 
-        if (cVar > 0.3) {
-            myPort.clear();
-            if (msg.checkAddrPattern("/muse/acc") == true) {
+            if (cVar > 0.3) {
+                myPort.clear();
+                if (msg.checkAddrPattern("/muse/acc") == true) {
 
-                aVar = msg.get(2).floatValue();
+                    aVar = msg.get(2).floatValue();
 
 
-                if ((aVar < -100 && (checkA > -150 && checkA < 150) || (aVar < -150 && checkA > 150) || ((aVar > -150 && aVar < 150) && checkA < -150) || (aVar > -150 && aVar < 150) && checkA > 150) || (aVar > 150 && (checkA < 150 && checkA > -150)) || (aVar > 150 && checkA < -150)) {
-                    passVar = "3A" + aVar + ",";
+                    if ((aVar < -100 && (checkA > -150 && checkA < 150) || (aVar < -150 && checkA > 150) || ((aVar > -150 && aVar < 150) && checkA < -150) || (aVar > -150 && aVar < 150) && checkA > 150) || (aVar > 150 && (checkA < 150 && checkA > -150)) || (aVar > 150 && checkA < -150)) {
+                        passVar = "3A" + aVar + ",";
 
-                    headSet.pass(myPort, passVar);
+                        headSet.pass(myPort, passVar);
 
-                    checkA = aVar;
-                    checkcVar = cVar;
+                        checkA = aVar;
+                        checkcVar = cVar;
 
-                    System.out.println("checkA: " + checkA);
-                    System.out.println("aVar: " + aVar);
+                        System.out.println("checkA: " + checkA);
+                        System.out.println("aVar: " + aVar);
+                    }/*else
+                    {
+                        passVar = "3A" + 100 + ",";
+                        headSet.pass(myPort, passVar);
+                    }*/
+
                 }
 
+            } else if (cVar < 0.3 && checkcVar > 0.3) {
+                passVar = "3A" + 0 + ",";
+                //headSet.pass(myPort, passVar);
+                myPort.write("1L" + 0 + ",");
+                myPort.write("1R" + 0 + ",");
+                checkcVar = cVar;
+                checkA = 500;
             }
         }
     }
-
-            public void motorSpeeds () {
-        /*
-            This method has to read in a value from Arduino and set the leftMotor and rightMotor slider value to the passed value e.g.
-            if(myPort.available() > 0)
-            {
-                if(strcmp(var,0,1) == 'L') // OR SOMETHING LIKE THAT TO BE CHECKED
-
-                if(var.read() >= 0)
-                {
-                    LeftMotor(var.read());
-                }
-r
-                if(var2.read() >=0)
-                {
-                    // HAS TO BE MAPPED AS ONE MOTOR IS FASTER THAN ANOTHER !
-                    // TO BE CHECKED IF ITS LEFT OR RIGHT !                    <<<------------------------
-                    float rightSpeed = map(var2.read(),0,200,0,255);
-                    RightMotor(rightSpeed);
-                }
-            }
-
-            Arduino should have a code like:
-            var.write(leftMotorCurrentSpeed);
-            var2.write(rightMotorCurrentSpeed);
-         */
-            }
-
-        public void movieEvent (Movie m)
-        {
-            m.read();
-        }
-
-        public static void main (String[]args)
-        {
-            PApplet.main(Main.class.getName());
-        /*String[] a = {"MAIN"};
-        PApplet.runSketch( a, new Main());*/
-        }
-    }
+}
 
