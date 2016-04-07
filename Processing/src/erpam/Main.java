@@ -1,8 +1,10 @@
 package erpam;
+
 import processing.core.*;
 import processing.core.PImage;
 import processing.video.*;
 import processing.serial.*;
+import oscP5.*;
 
 /**
  * Created by Eryk Szlachetka and Pamela Sabio on 14/03/2016.
@@ -37,7 +39,7 @@ public class Main extends PApplet {
     HeadSet headSet;
     float checkcVar = 0;
 
-      public void settings() {
+    public void settings() {
         size(displayWidth, displayHeight);
     }
 
@@ -106,69 +108,60 @@ public class Main extends PApplet {
     }
 
     public void keyPressed() {
-
-        //float value = map(valueReturned, 90, 230, 60, 230);
-        //String passValue = "L" + value;
-        // keys[keyCode] = true; Slows down the reaction time ?
-        if(choice == 1) {
+        if (choice == 1) {
             if (keyCode == 'W') {
-
-                if(speed < 0 || leftspeed < 0)
-                {
-                    speed = 0;
-                    leftspeed = 0;
-                    currentGear = 'N';
-
-                }else {
-                    speed = 200;
-                    leftspeed = 170;
-                    currentGear = 'D';
-                }
-
+                acceleration('W');
             } else if (keyCode == 'S') {
-                if (speed == 0 && leftspeed == 0) {
-                    speed = -200;
-                    leftspeed = -190;
-                    currentGear = 'R';
-                } else {
-                    speed = 0;
-                    leftspeed = 0;
-                    currentGear = 'N';
-                }
+                acceleration('S');
             } else if (keyCode == 'A') {
-                if(speed >= 0 && leftspeed >= 50) {
-                    speed = 200;
-                    leftspeed -= 50;
-                }else if(speed < 0 && leftspeed < 0)
-                {
-                    speed = -200;
-                    leftspeed += 50;
-                }
+                //turning('A');
             } else if (keyCode == 'D') {
-                if(speed >= 50 && leftspeed >= 0) {
-                    leftspeed = 170;
-                    speed -= 50;
-                }else if(speed < 0 && leftspeed < 0)
-                {
-                    leftspeed = -190;
-                    speed += 50;
-                }
+                //turning('D');
 
             } else {
-                System.out.print("im in else");
                 leftspeed = 0;
-                speed = 0;
+                rightspeed = 0;
             }
 
-            myPort.write("R" + speed + ",");
-            myPort.write("L" + leftspeed + ",");
+            myPort.write("1L" + leftspeed + ",");
+            myPort.write("1R" + rightspeed + ",");
 
-            BT.update(speed,leftspeed);
-
+            BT.update(rightspeed, leftspeed);
         }
 
 
     }
+
+
+    public void acceleration(char value) {
+        if (value == 'W') // Go forward
+        {
+            if (rightspeed < 0 || leftspeed < 0) {
+                rightspeed = 0;
+                leftspeed = 0;
+                currentGear = 'N';
+
+            } else {
+                //rightspeed = 200;
+                //leftspeed = 170;
+                rightspeed = 220;
+                leftspeed = 200;
+                currentGear = 'D';
+            }
+        } else if (value == 'S')  // Go backward
+        {
+            if (rightspeed <= 0 && leftspeed <= 0) {
+                rightspeed = -200;
+                leftspeed = -190;
+                currentGear = 'R';
+            } else {
+                rightspeed = 0;
+                leftspeed = 0;
+                currentGear = 'N';
+            }
+        }
+    }
+
 
     public void motorSpeeds(){
         /*
