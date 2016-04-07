@@ -193,6 +193,28 @@ public class Main extends PApplet {
                 System.out.println("cVar: " + cVar);
             }
         }
+
+        if (cVar > 0.3) {
+            myPort.clear();
+            if (msg.checkAddrPattern("/muse/acc") == true) {
+
+                aVar = msg.get(2).floatValue();
+
+
+                if ((aVar < -100 && (checkA > -150 && checkA < 150) || (aVar < -150 && checkA > 150) || ((aVar > -150 && aVar < 150) && checkA < -150) || (aVar > -150 && aVar < 150) && checkA > 150) || (aVar > 150 && (checkA < 150 && checkA > -150)) || (aVar > 150 && checkA < -150)) {
+                    passVar = "3A" + aVar + ",";
+
+                    headSet.pass(myPort, passVar);
+
+                    checkA = aVar;
+                    checkcVar = cVar;
+
+                    System.out.println("checkA: " + checkA);
+                    System.out.println("aVar: " + aVar);
+                }
+
+            }
+        }
     }
 
             public void motorSpeeds () {
