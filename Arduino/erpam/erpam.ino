@@ -42,6 +42,36 @@ void loop() {
   }
 }
 
+void serialEvent()
+{
+  if (BTserial.available())
+  {
+    BluetoothData = BTserial.readStringUntil(',');
+
+    if (BluetoothData.startsWith("1"))
+    {
+      BluetoothData.replace("1", "");
+      choice = 1;
+    } else if (BluetoothData.startsWith("2"))
+    {
+      choice = 2;
+    } else if (BluetoothData.startsWith("3"))
+    {
+      BluetoothData.replace("3", "");
+      acc = "";
+      if (BluetoothData.startsWith("A"))
+      {
+        acc = BluetoothData;
+        acc.replace("A", "");
+      }
+      choice = 3;
+      BTserial.flush();
+    }
+
+    Serial.println(BluetoothData);
+  }
+}
+
 void bluetoothcontrol(String BluetoothData)
 {
   if (BluetoothData.startsWith("L"))
