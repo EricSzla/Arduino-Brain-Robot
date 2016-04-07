@@ -1,15 +1,18 @@
 #include <stdlib.h>
-
+#include "HeadSet.h"
 #include <SoftwareSerial.h>
-SoftwareSerial Genotronex(10, 11);
+SoftwareSerial BTSerial(0, 1);
 String BluetoothData;
 
+using namespace ErPpamBot;
 using namespace std;
+
+HeadSet hs;
 
 
 void setup() {
   // put your setup code here, to run once:
-  Genotronex.begin(9600);
+  BTSerial.begin(9600);
   //Setup Channel A
   pinMode(12, OUTPUT); //Initiates Motor Channel A pin
   pinMode(9, OUTPUT); //Initiates Brake Channel A pin
@@ -23,46 +26,16 @@ void setup() {
 }
 
 void loop() {
-  if (Genotronex.available())
+   switch (choice)
   {
-    BluetoothData = Genotronex.readStringUntil(',');
-
-    if (BluetoothData.startsWith("L"))// if number 1 pressed ....
-    {
-      BluetoothData.replace("L", "");
-      float sSpeed = BluetoothData.toFloat();
-
-      if (sSpeed > 0 )
-      {
-        digitalWrite(12, HIGH);
-
-      } else if (sSpeed < 0)
-      {
-        digitalWrite(12, LOW);
-        sSpeed *= -1;
-      }
-
-      digitalWrite(9, LOW);
-      analogWrite(3, sSpeed);
-    }
-
-    if (BluetoothData.startsWith("R")) { // if number 0 pressed ....
-
-      BluetoothData.replace("R", "");
-      float sSpeed = BluetoothData.toFloat();
-
-      if (sSpeed > 0 )
-      {
-        digitalWrite(13, HIGH);
-
-      } else if (sSpeed < 0)
-      {
-        digitalWrite(13, LOW);
-        sSpeed *= -1;
-      }
-
-      digitalWrite(8, LOW);
-      analogWrite(11, sSpeed);
-    }
+    case 1:
+      //bluetoothcontrol(BluetoothData);
+      break;
+    case 2:
+      //      aifxn();
+      break;
+    case 3:
+      headSetfxn();
+      break;
   }
 }
