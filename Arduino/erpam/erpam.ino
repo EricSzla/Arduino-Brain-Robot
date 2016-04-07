@@ -2,13 +2,15 @@
 #include "HeadSet.h"
 #include <SoftwareSerial.h>
 SoftwareSerial BTSerial(0, 1);
-String BluetoothData;
 
 using namespace ErpamBot;
 using namespace std;
 
 HeadSet hs;
 
+String BluetoothData;
+String acc = "";
+int choice = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -80,3 +82,13 @@ void bluetoothcontrol(String BluetoothData)
     analogWrite(11, sSpeed);
   }
 }
+
+void headSetfxn()
+{
+  float nacc = acc.toFloat();
+
+  //Serial.println(ncon);
+  hs.go_forward(nacc);
+}
+
+
