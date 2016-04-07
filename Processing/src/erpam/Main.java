@@ -12,7 +12,7 @@ import oscP5.*;
 
 public class Main extends PApplet {
 
-   // For Arduino connection
+    // For Arduino connection
     Serial myPort;
     RemoteControl BT;
 
@@ -66,8 +66,7 @@ public class Main extends PApplet {
     }
 
 
-    public void draw()
-    {
+    public void draw() {
         switch (choice) {
             case 0:
                 menu();
@@ -86,25 +85,22 @@ public class Main extends PApplet {
         }
     }
 
-    public void mouseClicked()
-    {
+    public void mouseClicked() {
         // To be completed
         choice = 1;
     }
 
-    public void menu()
-    {
+    public void menu() {
         background(0);
         //image(trailer,0,0,width,height);
         image(erpam, 0, 0);
 
-        if (x < width/6)
-        {
-            x+=10;
+        if (x < width / 6) {
+            x += 10;
         }
 
         fill(255);
-        text("---> TERRITORY MAPPING", x, height/3);
+        text("---> TERRITORY MAPPING", x, height / 3);
 
     }
 
@@ -184,8 +180,22 @@ public class Main extends PApplet {
         }
     }
 
+    // Use this code if HeadSet connected
 
-    public void motorSpeeds(){
+    public void oscEvent(OscMessage msg) {
+        if (choice == 1) {
+
+            if (msg.checkAddrPattern("/muse/elements/experimental/concentration") == true) {
+                cVar = msg.get(0).floatValue();
+                //System.out.println("cVar: " + cVar);
+                //System.out.println("checkC: " + checkC);
+
+                System.out.println("cVar: " + cVar);
+            }
+        }
+    }
+
+            public void motorSpeeds () {
         /*
             This method has to read in a value from Arduino and set the leftMotor and rightMotor slider value to the passed value e.g.
             if(myPort.available() > 0)
@@ -210,36 +220,18 @@ r
             var.write(leftMotorCurrentSpeed);
             var2.write(rightMotorCurrentSpeed);
          */
-    }
-
-    public void Turning(float value)
-    {
-        /*
-            This method should set the turning slide depending on either:
-                - Keyboard input e.g.  input = A then decrease the slider,  input == D then increase the slider
-                - Difference between Left and Right motor's speed. Use map function?
-
-
-            if(keyPressed == 'D')
-            {
-                Turning(--value);
-            }else if(keyPressed == 'A')
-            {
-                Turning(--value);
             }
 
-         */
-    }
-    public void movieEvent(Movie m)
-    {
-        m.read();
-    }
+        public void movieEvent (Movie m)
+        {
+            m.read();
+        }
 
-    public static void main(String[] args)
-    {
-        PApplet.main(Main.class.getName());
+        public static void main (String[]args)
+        {
+            PApplet.main(Main.class.getName());
         /*String[] a = {"MAIN"};
         PApplet.runSketch( a, new Main());*/
+        }
     }
-}
 

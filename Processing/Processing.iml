@@ -12,6 +12,5 @@
     <orderEntry type="library" name="oscP5" level="application" />
     <orderEntry type="library" name="serial" level="application" />
     <orderEntry type="library" name="video" level="application" />
-    <orderEntry type="library" name="jl1.0.1" level="application" />
   </component>
 </module>
