@@ -10,28 +10,38 @@ import processing.serial.*;
 
 public class Main extends PApplet {
 
-    // For Arduino connection
+   // For Arduino connection
     Serial myPort;
     RemoteControl BT;
 
-    Movie trailer;
-    //boolean[] keys = new boolean[512];
+    Movie trailer; // Background movie
 
-    PImage erpam;
-    int x = 0;
+    PImage erpam;  // Menu image
+    int x = 0;     // Used for animation in menu
 
-    int choice = 0;
-    float speed = 0;
-    float leftspeed = 0;
+    int choice = 0;         // User choice (menu)
+    float rightspeed = 0;   // Right speed of the motor
+    float leftspeed = 0;    // Left speed of the motor
     char currentGear = 'N';
 
-    public void settings()
-    {
-        size(700, 500);
+
+    // Use this code if HeadSet connected
+    //  muse-io --device Muse --osc osc.udp://localhost:5000
+    OscP5 oscp5;
+    float cVar = 0; // Concetration data
+    float aVar = 0; // Accelometer data
+    float checkA = 800;
+    float checkC = 1;
+    String passVar = "";
+    String passVar1 = "";
+    HeadSet headSet;
+    float checkcVar = 0;
+
+      public void settings() {
+        size(displayWidth, displayHeight);
     }
 
-    public void setup()
-    {
+    public void setup() {
         printArray(Serial.list()); // Prints the serial lists
 
         // Start the Bluetooth port
@@ -46,7 +56,13 @@ public class Main extends PApplet {
 
         BT = new RemoteControl(this);
         smooth();
+
+        // Use this code if HeadSet connected
+
+        oscp5 = new OscP5(this, 5000);
+        headSet = new HeadSet(this);
     }
+
 
     public void draw()
     {
