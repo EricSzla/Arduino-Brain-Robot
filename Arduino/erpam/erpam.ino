@@ -4,7 +4,7 @@
 SoftwareSerial BTSerial(0, 1);
 String BluetoothData;
 
-using namespace ErPpamBot;
+using namespace ErpamBot;
 using namespace std;
 
 HeadSet hs;
@@ -37,5 +37,46 @@ void loop() {
     case 3:
       headSetfxn();
       break;
+  }
+}
+
+void bluetoothcontrol(String BluetoothData)
+{
+  if (BluetoothData.startsWith("L"))
+  {
+    BluetoothData.replace("L", "");
+    float sSpeed = BluetoothData.toFloat();
+
+    if (sSpeed > 0 )
+    {
+      digitalWrite(12, HIGH);
+
+    } else if (sSpeed < 0)
+    {
+      digitalWrite(12, LOW);
+      sSpeed *= -1;
+    }
+
+    digitalWrite(9, LOW);
+    analogWrite(3, sSpeed);
+  }
+
+  if (BluetoothData.startsWith("R")) {
+
+    BluetoothData.replace("R", "");
+    float sSpeed = BluetoothData.toFloat();
+
+    if (sSpeed > 0 )
+    {
+      digitalWrite(13, HIGH);
+
+    } else if (sSpeed < 0)
+    {
+      digitalWrite(13, LOW);
+      sSpeed *= -1;
+    }
+
+    digitalWrite(8, LOW);
+    analogWrite(11, sSpeed);
   }
 }
