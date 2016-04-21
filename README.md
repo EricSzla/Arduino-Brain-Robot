@@ -114,9 +114,8 @@
     - NewPingSensor.h (Class used to controll UltraSonic sensors using newPing library)
     - distanceSensor.h (Base class for the sensors)
 
-**distanceSensor.h**
-- This class is used as a base class for sensor drivers, if you want to use another library for your sensor then all you have to do is<br>
-  write a driver for your sensor and  extend this class. </br>
+## **distanceSensor.h**
+- This class is used as a base class for sensor drivers, if you want to use another library for your sensor then all you have to do is write a driver for your sensor and  extend this class. </br>
   
   The class has a protected int variable which means only this class and the subclasses can use this variable
   
@@ -141,11 +140,37 @@
   };
 ```
   
-**NewPingSensor.h**
-- This class is used to control the UltraSonic sensors, the class implements two methods: <br>
-<b>getDistance()</b> which returns distance from the obstacle in <b>cm</b><br>
+## **NewPingSensor.h**
+- This class is used to control the UltraSonic sensors, the class implements two methods getDistance() and getMedian() <br>
+
+### <b>Constructor</b>
+The class has a private field of type NewPing called sensor, which is the variable we are going to refer to in order to receive data from the sensor.
+The constructor accepts three parameters, the triggerPin, echoPin and the maxDistance, which are going to be passed in the main class.
 
 
+```
+private:
+    NewPing sensor;
+  public:
+    NewPingSensor(int triggerPin, int echoPin, unsigned int maxDistance)
+      : SensorDriver(maxDistance),
+        sensor(triggerPin, echoPin, maxDistance)
+    {
+    }
+```
+
+The maxDistance is passed to the base class SensorDriver (distanceSensor.h)
+
+> : SensorDriver(maxDistance),
+
+The sensor variable is initialized with the pins and maxDistance
+
+> sensor(triggerPin, echoPin, maxDistance)
+
+### <b>getDistance()</b>
+This method returns distance from the obstacle in <b>cm</b><br>
+
+```
     virtual unsigned int getDistance()
     {
       int distance = sensor.ping_cm();
@@ -158,7 +183,7 @@
         return distance;
       }
     }    
-    
+```   
     
 Distance variable is storing the distance from the obstacle in cm using the method called from new ping library 'ping_cm()'
 > int distance = sensor.ping_cm();
@@ -173,8 +198,88 @@ if (distance <= 0 )
 ```
 
 
-<b>getMedian</b> which returns median from 5 sensors scans
+### <b>getMedian()</b>
+This method returns median from 5 sensors scans which are <b> NOT </b> in <b> cm </b>.
 
-<b>Constructor</b> for the class 
+```
+virtual unsigned int getMedian()
+    {
+      int median = sensor.ping_median(5);
+      int cm = sensor.convert_cm(median);
 
-<b>Full code for the class</b>
+
+      if (cm <= 0 )
+      {
+        return maxDistance;
+      } else
+      {
+        return cm;
+      }
+      
+    }
+```
+
+This time we are storing the median instead of just the distance and converting it to cm, the reason for that is that sometime the sensors may read a wrong value, consider the example:
+
+```
+Sensor Data:
+cm: 30
+cm: 29
+cm: 28
+cm: 0       << --- 
+cm: 29
+cm: 30
+cm: 29
+```
+
+If the sensor will return a 0 when it shouldn't it can introduce chaos to the AI function, therefor if we get the median of the 5 values, 0 will lower the median, but the result will be still acceptable.</br>
+
+### <b>Full code for the class</b>
+```
+/* Driver for newPing sensor */
+#include "distanceSensor.h"
+namespace ErpamBot
+{
+class NewPingSensor : public SensorDriver
+{
+  private:
+    NewPing sensor;
+  public:
+    NewPingSensor(int triggerPin, int echoPin, unsigned int maxDistance)
+      : SensorDriver(maxDistance),
+        sensor(triggerPin, echoPin, maxDistance)
+    {
+    }
+
+    virtual unsigned int getDistance()
+    {
+
+      int distance = sensor.ping_cm();
+
+      if (distance <= 0 )
+      {
+        return maxDistance;
+      } else
+      {
+        return distance;
+      }
+    }
+
+    virtual unsigned int getMedian()
+    {
+      int median = sensor.ping_median(5);
+      int cm = sensor.convert_cm(median);
+
+
+      if (cm <= 0 )
+      {
+        return maxDistance;
+      } else
+      {
+        return cm;
+      }
+      
+    }
+};
+};
+```
