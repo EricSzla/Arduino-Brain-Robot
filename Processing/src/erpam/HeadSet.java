@@ -157,5 +157,65 @@ public class HeadSet {
         papplet.popMatrix();
 
     }
+
+    public void updateWheel(float dir)
+    {
+        if(dir > 150)
+        {
+            rw = 2;
+        }else if(dir < -150)
+        {
+            rw = 1;
+        }else
+        {
+            rw = 0;
+        }
+    }
+
+
+    public void updatePetrol(int dir)
+    {
+        if(dir == 0) {
+            if(meterTheta >= 0.05f) {
+                meterTheta -= 0.01f;
+            }else
+            {
+                petrol = false;
+                papplet.fill(255,0,0);
+                papplet.text("Petrol not available !", papplet.width/1.2f, papplet.height/1.55f);
+            }
+        }else if(dir == 1)
+        {
+            if(meterTheta <= papplet.PI) {
+                meterTheta += 0.01f;
+            }else
+            {
+                petrol = true;
+                papplet.fill(255);
+                papplet.text("Petrol available !", papplet.width/1.2f, papplet.height/1.55f);
+            }
+        }
+
+        this.x2 =  fuelX + papplet.sin(meterTheta - papplet.PI /2 - papplet.TWO_PI/70) * (radius / 2 - 10);
+        this.y2 = fuelY - papplet.cos(meterTheta - papplet.PI/2 - papplet.TWO_PI/70) * (radius / 2 - 10);
+    }
+
+    public void updateSpeedo(int dir)
+    {
+        if(dir == 0)
+        {
+            if(speedoTheta2 <= papplet.PI) {
+                speedoTheta2 += 0.01f;
+            }
+        }else if(dir == 1)
+        {
+            if(speedoTheta2 >= 0.1f) {
+                speedoTheta2 -= 0.01f;
+            }
+        }
+
+        this.speedox2 =  speedoX + papplet.sin(speedoTheta2 + papplet.PI /2 - papplet.TWO_PI/70) * (radius - 5);
+        this.speedoy2 = speedoY -papplet.cos(speedoTheta2 - papplet.PI/2 - papplet.TWO_PI/70) * (radius - 5);
+    }
 }
 
