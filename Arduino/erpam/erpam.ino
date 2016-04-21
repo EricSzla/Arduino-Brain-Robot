@@ -47,7 +47,7 @@ int obstacleRight = 0;
 int obstacleLeft = 0;
 
 void setup() {
-// put your setup code here, to run once:
+  // put your setup code here, to run once:
   BTserial.begin(9600);
   Serial.begin(19200);
   //Setup Channel A
@@ -72,7 +72,7 @@ void setup() {
 }
 
 void loop() {
-   switch (choice)
+  switch (choice)
   {
     case 1:
       bluetoothcontrol(BluetoothData);
@@ -111,8 +111,6 @@ void serialEvent()
       choice = 3;
       BTserial.flush();
     }
-
-    Serial.println(BluetoothData);
   }
 }
 
@@ -160,9 +158,168 @@ void bluetoothcontrol(String BluetoothData)
 void headSetfxn()
 {
   float nacc = acc.toFloat();
-
-  //Serial.println(ncon);
   hs.go_forward(nacc);
 }
 
+void aifxn()
+{
+  /*if (!go)
+  {
+    ai.go_forward();
+    go = true;
+    median = distanceSensor.getMedian();
+    medianLeft = sensorLeft.getMedian();
+    medianRight = sensorRight.getMedian();
 
+  }*/
+  ai.go_forward();
+  median = distanceSensor.getMedian();
+  medianLeft = sensorLeft.getMedian();
+  medianRight = sensorRight.getMedian();
+
+   if(medianLeft < TOO_CLOSE / 5)
+    {
+      ai.turn_right();
+      delay(50);
+      ai.brake();
+      ai.turn_left();
+      delay(5);
+    }else if (medianRight < TOO_CLOSE / 5)
+    {
+      ai.turn_left();
+      delay(50);
+      ai.brake();
+      ai.turn_right();
+      delay(10);
+    }
+
+
+  if (median < CLOSE * 2) // medianFront
+  {
+    ai.brake();
+    delay(500);
+    brakeFlag = true;
+    if(median < TOO_CLOSE/5)
+    {
+      ai.go_backward();
+      delay(200);
+      ai.brake();
+    }
+  }
+  else
+  {
+    brakeFlag = false;
+  }
+
+  if (brakeFlag)
+  {
+    checkObstacles();
+    brakeFlag = false;
+    go = false;
+  }
+
+  aifxn();
+}
+
+void checkObstacles()
+{
+  median = distanceSensor.getMedian();
+  medianLeft = sensorLeft.getMedian();
+  medianRight = sensorRight.getMedian();
+
+  if (medianLeft < TOO_CLOSE && medianRight < TOO_CLOSE)
+  {
+    ai.go_backward();
+    checkObstacles();
+  } else if (medianLeft < TOO_CLOSE && medianRight > TOO_CLOSE)
+  {
+
+    ai.turn_right();
+    delay(270);
+  } else if (medianLeft > TOO_CLOSE && medianRight < TOO_CLOSE)
+  {
+
+    ai.turn_left();
+    delay(220);
+  } else if (medianLeft > TOO_CLOSE && medianRight > TOO_CLOSE)
+  {
+    int r = random(2, 10);
+    if (r % 2 == 0)
+    {
+      ai.turn_left();
+      delay(220);
+    } else if (r % 2 != 0)
+    {
+      ai.turn_right();
+      delay(270);
+    }
+  }
+}
+
+
+
+// CODE TO WORK WITH ONE ULTRASONIC FRONT SENSOR ONLY
+// The method will go forward until hits an obstacle
+// When obstacle hit then turn left and see if there is obstacle there
+// if there is none continue straight, if there is an obstacle
+// turn right in order to come back to the same position
+// then turn right again and see if there is obstacle on the right
+// if there is none continue straight
+// if there is an obstacle then turn left back to the initial position
+// and start reversing and use recursive algorithm in order to check
+// when the obstacles on the left or right side are gone
+/*
+  void aifxn()
+  {
+  if (!go)
+  {
+    ai.go_forward();
+    go = true;
+    median = distanceSensor.getMedian();
+  }
+
+  cm = distanceSensor.getMedian();
+
+  if (cm < TOO_CLOSE)
+  {
+    ai.brake();
+    delay(500);
+    brakeFlag = true;
+  }
+  else
+  {
+    brakeFlag = false;
+    go = false;
+  }
+
+  if (brakeFlag)
+  {
+    checkObstacles();
+    brakeFlag = false;
+  }
+  }
+
+  void checkObstacles()
+  {
+  checkObstacleLeft();
+
+  if (obstacleLeft == true)
+  {
+    checkObstacleRight();
+    delay(500);
+    if (obstacleRight == true)
+    {
+      ai.go_backward();
+      delay(1000); // Wait a second in order to brake
+      ai.brake();
+      checkObstacles();
+    } else
+    {
+      ai.go_forward();
+    }
+  } else
+  {
+    //brakeFlag = false;
+    //go = false;
+  }
+  }*/
