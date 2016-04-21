@@ -161,6 +161,21 @@ void headSetfxn()
   hs.go_forward(nacc);
 }
 
+void test()
+{
+  medianLeft = sensorLeft.getMedian();
+  medianRight = sensorRight.getMedian();
+
+  if (medianRight < CLOSE)
+  {
+    ai.go_forward();
+  }else
+  {
+    ai.brake();
+  }
+
+
+}
 void aifxn()
 {
   /*if (!go)
@@ -321,5 +336,49 @@ void checkObstacles()
   {
     //brakeFlag = false;
     //go = false;
+  }
+  }
+
+  void checkObstacleLeft()
+  {
+  ai.turn_left();
+  delay(220);
+  ai.brake();
+  delay(500);
+  cm = distanceSensor.getMedian();
+
+  if (cm < TOO_CLOSE)
+  {
+    ai.turn_right();
+    delay(240);
+    ai.brake();
+    delay(500);
+    obstacleLeft = true;
+  }
+  else
+  {
+    obstacleLeft = false;
+  }
+  }
+
+  void checkObstacleRight()
+  {
+  ai.turn_right();
+  delay(240);
+  ai.brake();
+  delay(500);
+
+  cm = distanceSensor.getMedian();
+
+  if (cm < TOO_CLOSE)
+  {
+    ai.turn_left();
+    delay(230);
+    ai.brake();
+    obstacleRight = true;
+  }
+  else
+  {
+    obstacleRight = false;
   }
   }*/
