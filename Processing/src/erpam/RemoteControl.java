@@ -34,9 +34,13 @@ public class RemoteControl{
     public void initialize()
     {
         // Sets sliders position, size, range and hides it
-        this.leftMotorSlider.setPosition(papplet.width/10-20,papplet.height- (papplet.height/4)).setSize(20,100).setRange(0,255).hide();
-        this.rightMotorSlider.setPosition(papplet.width-papplet.width/10,papplet.height- (papplet.height/4)).setSize(20,100).setRange(0,255).hide();
-        this.turningSlider.setPosition(150,370).setWidth(400).setRange(255,0).setValue(128).setSliderMode(Slider.FLEXIBLE).setLabelVisible(false).hide();
+        this.leftMotorSlider.setPosition(papplet.width/10-20,papplet.height- (papplet.height/4));
+        this.leftMotorSlider.setSize(20,100).setRange(0,255).hide();
+        this.rightMotorSlider.setPosition(papplet.width-papplet.width/10,papplet.height- (papplet.height/4));
+        this.rightMotorSlider.setSize(20,100).setRange(0,255).hide();
+        this.turningSlider.setPosition(150,370);
+        this.turningSlider.setWidth(400).setRange(255,0).setValue(128).setSliderMode(Slider.FLEXIBLE).setLabelVisible(false);
+        this.turningSlider.hide();
     }
 
     public void render(char gear)

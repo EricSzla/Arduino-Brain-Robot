@@ -123,7 +123,7 @@ public class Main extends PApplet {
         textAlign(CENTER);
         text("Bluetooth Control", width/2,height/2);
         text("AI Robot", width/2, height/2 + 100);
-        text("Headset Control", width/2, height/2 + 200);Y MAPPING", x, height / 3);
+        text("Headset Control", width/2, height/2 + 200);
 
     }
 

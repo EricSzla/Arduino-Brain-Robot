@@ -15,6 +15,7 @@
 * [To do](#to-do)</br>
 * [Section 1: Hardware](#section-1:-hardware) </br>
 * [Section 2: Assembly](#section-2:-assembly)</br>
+* [Section 3: Arduino Code](#section-3:-arduino)</br>
 
 ### Objective:
 
@@ -25,12 +26,12 @@
        
 ### To do:
 - [x] Order Hardware
-- [x] Learn C++
-- [x] Program arduino board
-- [ ] Program distance sensor
-- [x] Program motor controller
-- [x] Add bluetooth
-- [x] Program android remote controll via bluetooth
+- [x] Assembly 
+- [x] Arduino: Program distance sensor
+- [x] Arduino: Program AI 
+- [x] Arduino: Program headSet
+- [x] Arduino: Program blueTooth control
+- [x] Make Arduino communicate with Processing using Bluetooth
 
 
 # Section 1: Hardware
@@ -101,3 +102,15 @@
 - The last step is connecting all the wires from the arduino or motor shield to the breadboard and the motors and then putting on the battery. The robot is now set for programming. 
 
 ![motor](https://cloud.githubusercontent.com/assets/15609506/13899540/b395d5fa-ede8-11e5-91e5-25da944ef7a0.jpg)
+
+# Section 2: Arduino Code
+- In our Arduino we are going to have five classes stored in separate files with .h extensions ( headers ):
+    - erpam (The main class)
+    - AiClass.h  (Class that stores methods for Artificial Intelligence
+    - HeadSet.h  (Class used for controlling the robot with the HeadSet)
+    - NewPingSensor.h (Class used to controll UltraSonic sensors using newPing library)
+    - distanceSensor.h (Base class for the sensors)
+
+**distanceSensor.h**
+**NewPingSensor.h**
+- This class is used to control the UltraSonic sensors, the class implements two methods, <b>getDistance()</b> which returns distance from the obstacle in <b>cm</b> and </b>getMedian</b> which returns median from 5 (by default) sensors scans
