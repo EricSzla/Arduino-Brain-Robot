@@ -65,5 +65,97 @@ public class HeadSet {
     {
         myPort.write(var);
     }
+
+    public void render() {
+        System.out.println("Petrol: " + petrol);
+        papplet.background(0);
+        papplet.pushMatrix();
+        papplet.fill(0);
+        papplet.noStroke();
+        papplet.text("Petrol", fuelX,fuelY + 30 );
+        papplet.ellipse(fuelX, fuelY, radius, radius);
+
+        for (int i = 0; i < fuelLines; i++) {
+
+            if(theta > papplet.PI/2 + 0.5 && theta <= papplet.PI + 0.01)
+            {
+                papplet.stroke(0,255, 0);
+
+            }else if(theta > papplet.PI/2 - 0.5 && theta < papplet.PI - 0.01)
+            {
+                papplet.stroke(255,255,0);
+            }else
+            {
+                papplet.stroke(255,0,0);
+            }
+            float lineX = fuelX + papplet.sin(theta - papplet.PI /2) * (radius / 2 - 5);
+            float lineY = fuelY - papplet.cos(theta - papplet.PI/2) * (radius /  2 - 5);
+
+            papplet.line(lineX, lineY, fuelX, fuelY);
+
+            theta += papplet.TWO_PI / fuelLines;
+            if (theta > papplet.PI) {
+                theta = 0;
+            }
+        }
+        papplet.fill(0);
+        papplet.stroke(0);
+        papplet.ellipse(fuelX,fuelY,radius/1.5f,radius/1.5f);
+        papplet.stroke(255);
+        papplet.strokeWeight(3);
+        papplet.ellipse(fuelX,fuelY,5,5);
+        papplet.line(fuelX,fuelY,x2,y2);
+        papplet.strokeWeight(2);
+        papplet.popMatrix();
+
+
+        papplet.pushMatrix();
+
+        //papplet.ellipse(speedoX, speedoY, radius*3f, radius*3f);
+
+        float thetaInc = papplet.TWO_PI/fuelLines;
+        float r;
+        for (int i = 1; i < fuelLines; i++) {
+
+
+            speedoTheta = i * thetaInc;
+
+            if (speedoTheta > papplet.PI) {
+                speedoTheta = 0;
+            }
+
+            if(i%2 == 0) {
+                r = radius/1.5f;
+            }
+            else
+            {
+                r = radius /1.05f;
+            }
+
+            float lineX1 = speedoX + papplet.sin(speedoTheta - papplet.PI /2) * (radius * 1.3f - 5);
+            float lineY1 = speedoY - papplet.cos(speedoTheta - papplet.PI/2) * (radius * 1.3f - 5);
+
+            float lineX2 = speedoX + papplet.sin(speedoTheta - papplet.PI /2) * (r);
+            float lineY2 = speedoY - papplet.cos(speedoTheta - papplet.PI/2) * (r);
+
+            papplet.stroke(255);
+            papplet.line(lineX1, lineY1, lineX2, lineY2);
+            //papplet.line(speedoX, speedoY, lineX, lineY);
+
+        }
+        papplet.fill(0);
+        papplet.stroke(0);
+        papplet.stroke(255,0,0);
+        papplet.strokeWeight(5);
+        papplet.ellipse(speedoX,speedoY,10,10);
+        papplet.line(speedoX,speedoY,speedox2,speedoy2);
+        papplet.strokeWeight(2);
+        papplet.popMatrix();
+
+        papplet.pushMatrix();
+        papplet.image(steeringWheel[rw],papplet.width/2+20,papplet.height-100);
+        papplet.popMatrix();
+
+    }
 }
 
