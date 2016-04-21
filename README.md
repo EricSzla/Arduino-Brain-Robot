@@ -108,13 +108,13 @@
 
 # Section 2: Arduino Code
 - In our Arduino we are going to have five classes stored in separate files with .h extensions ( headers ):
-    - erpam (The main class)
+    - [erpam (The main class)](##erpam)
     - AiClass.h  (Class that stores methods for Artificial Intelligence
     - HeadSet.h  (Class used for controlling the robot with the HeadSet)
-    - NewPingSensor.h (Class used to controll UltraSonic sensors using newPing library)
-    - distanceSensor.h (Base class for the sensors)
+    - [NewPingSensor.h (Class used to controll UltraSonic sensors using newPing library)](##NewPingSensor.h)
+    - [distanceSensor.h (Base class for the sensors)](##distanceSensor.h)
 
-## **distanceSensor.h**
+## distanceSensor.h
 - This class is used as a base class for sensor drivers, if you want to use another library for your sensor then all you have to do is write a driver for your sensor and  extend this class. </br>
   
   The class has a protected int variable which means only this class and the subclasses can use this variable
