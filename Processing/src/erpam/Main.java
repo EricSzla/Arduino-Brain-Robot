@@ -33,11 +33,11 @@ public class Main extends PApplet {
     float cVar = 0; // Concetration data
     float aVar = 0; // Accelometer data
     float checkA = 800;
-    float checkC = 1;
     String passVar = "";
-    String passVar1 = "";
     HeadSet headSet;
     float checkcVar = 0;
+    int pdir = 0;
+    int sdir = 0;
 
     public void settings() {
         size(displayWidth, displayHeight);
@@ -45,24 +45,31 @@ public class Main extends PApplet {
 
     public void setup() {
         printArray(Serial.list()); // Prints the serial lists
-
-        // Start the Bluetooth port
         String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
-        myPort = new Serial(this, portName, 9600); // Initialize myPort and set the bit rate
 
+        try {
+            myPort = new Serial(this, portName, 9600); // Initialize myPort and set the bit rate
+        }catch (RuntimeException e)
+        {
+            e.printStackTrace();
+        }
+
+        // Headset Connection
+        try {
+            oscp5 = new OscP5(this, 5000);
+            headSet = new HeadSet(this);
+        }catch (RuntimeException e)
+        {
+            e.printStackTrace();
+        }
+
+        rectMode(CENTER);
         frameRate(60);
         erpam = loadImage("erpam.png");
-
-        //trailer = new Movie(this,"trailer.mp4");
-        //trailer.loop()
-
         BT = new RemoteControl(this);
         smooth();
 
-        // Use this code if HeadSet connected
 
-        oscp5 = new OscP5(this, 5000);
-        headSet = new HeadSet(this);
     }
 
     public void draw() {
@@ -74,10 +81,15 @@ public class Main extends PApplet {
                 BT.render(currentGear);
                 break;
             case 2:
-                //ai()
+
                 break;
             case 3:
-                //headSet()
+
+                // Consider using those methods for headset
+                //headSet.updateSpeedo(sdir);
+                //headSet.updateWheel(200);
+                //headSet.render();
+                //headSet.updatePetrol(pdir);
                 break;
             default:
                 menu();
@@ -94,8 +106,7 @@ public class Main extends PApplet {
 
     public void menu() {
         background(0);
-        //image(trailer,0,0,width,height);
-        image(erpam, 0, 0);
+        image(erpam, width/2,erpam.height);
 
         if (x < width / 6) {
             x += 10;
@@ -104,9 +115,23 @@ public class Main extends PApplet {
         fill(255);
         text("---> TERRITORY MAPPING", x, height / 3);
 
+        rect(width/2,height/2,200,50);
+        rect(width/2,height/2 + 100, 200, 50);
+        rect(width/2,height/2 + 200, 200, 50);
+
+        fill(0);
+        textAlign(CENTER);
+        text("Bluetooth Control", width/2,height/2);
+        text("AI Robot", width/2, height/2 + 100);
+        text("Headset Control", width/2, height/2 + 200);Y MAPPING", x, height / 3);
+
     }
 
     public void keyPressed() {
+        if(choice == 2)
+        {
+            myPort.write("2ff,");
+        }
         if (choice == 1) {
             if (keyCode == 'W') {
                 acceleration('W');
@@ -192,61 +217,54 @@ public class Main extends PApplet {
 
 
     // Use this code if HeadSet connected
-
     public void oscEvent(OscMessage msg) {
-        if (choice == 1) {
-
-            // if(frameCount % 20 == 0) {
-
-
+        if (choice == 3) {
             if (msg.checkAddrPattern("/muse/elements/experimental/concentration") == true) {
                 cVar = msg.get(0).floatValue();
-                //System.out.println("cVar: " + cVar);
-                //System.out.println("checkC: " + checkC);
-
-                System.out.println("cVar: " + cVar);
-                    /*if((checkC > 0.5 && cVar < 0.5) || (checkC < 0.5 && cVar > 0.5))
-                    {
-                        passVar1 = "3C" + cVar + ",";
-                        //headSet.pass(myPort, passVar, passVar1);
-                        checkC = cVar;
-
-                    }*/
+                System.out.println("C: " + cVar);
             }
 
-            if (cVar > 0.3) {
+            /*if(headSet.petrol == false)
+            {
+                 if(msg.checkAddrPattern("/muse/elements/experimental/mellow") == true)
+                 {
+                     float mVar = msg.get(0).floatValue();
+                     System.out.println(mVar);
+                     if(mVar == 1)
+                     {
+                         pdir = 1;
+                     }else
+                     {
+                         pdir = 3;
+                     }
+
+                 }
+            }*/
+
+            if (cVar > 0.3 ) {//&& headSet.petrol == true) {
                 myPort.clear();
+                pdir = 0;
+                sdir = 1;
                 if (msg.checkAddrPattern("/muse/acc") == true) {
-
                     aVar = msg.get(2).floatValue();
-
 
                     if ((aVar < -100 && (checkA > -150 && checkA < 150) || (aVar < -150 && checkA > 150) || ((aVar > -150 && aVar < 150) && checkA < -150) || (aVar > -150 && aVar < 150) && checkA > 150) || (aVar > 150 && (checkA < 150 && checkA > -150)) || (aVar > 150 && checkA < -150)) {
                         passVar = "3A" + aVar + ",";
-
                         headSet.pass(myPort, passVar);
-
                         checkA = aVar;
                         checkcVar = cVar;
-
-                        System.out.println("checkA: " + checkA);
-                        System.out.println("aVar: " + aVar);
-                    }/*else
-                    {
-                        passVar = "3A" + 100 + ",";
-                        headSet.pass(myPort, passVar);
-                    }*/
-
+                    }
                 }
 
-            } else if (cVar < 0.3 && checkcVar > 0.3) {
-                passVar = "3A" + 0 + ",";
-                //headSet.pass(myPort, passVar);
+
+
+            } else if (cVar < 0.3 && checkcVar > 0.3 ){//|| headSet.petrol == false) {
+                sdir = 0;
                 myPort.write("1L" + 0 + ",");
                 myPort.write("1R" + 0 + ",");
                 checkcVar = cVar;
-                System.out.println("checkAblabla");
                 checkA = 500;
+                currentGear = 'N';
             }
         }
     }
