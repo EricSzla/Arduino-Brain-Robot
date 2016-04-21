@@ -19,7 +19,7 @@ public class RemoteControl{
     RemoteControl(PApplet papplet) {
 
         this.papplet = papplet;
-        this.cp5 = new ControlP5(this.papplet); // Iniliatilze new control p5
+        this.cp5 = new ControlP5(this.papplet); // Initialize new control p5
 
         // Add motorSliders to cp5
         this.leftMotorSlider = cp5.addSlider("LeftMotor");
@@ -61,7 +61,6 @@ public class RemoteControl{
         // Update controls
         rightMotorSlider.setValue(papplet.map(speed,0,200,0,255));
         leftMotorSlider.setValue(papplet.map(leftspeed,0,170,0,255));
-        //turningSlider.setValue();
 
     }
 
