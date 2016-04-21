@@ -18,7 +18,10 @@
 * [Section 3: Arduino Code](#section-3:-arduino)</br>
 
 ### Objective:
-
+- The objective is to build and program an <b>AI</b> robot which can avoid obstacles, by making decisions on its own. <br>
+  The project will also implement <b>Bluetooth Control</b> using Processing IDE.</br>
+  The robot can also be controlled using a head set that reads your <b>brainwaves</b></br>
+  
 ### Useful resources:
 **Arduino Library:** https://www.arduino.cc/en/Reference/HomePage</br>
 **Getting Started with Arduino:** https://www.arduino.cc/en/Guide/HomePage</br>
@@ -112,5 +115,66 @@
     - distanceSensor.h (Base class for the sensors)
 
 **distanceSensor.h**
+- This class is used as a base class for sensor drivers, if you want to use another library for your sensor then all you have to do is<br>
+  write a driver for your sensor and  extend this class. </br>
+  
+  The class has a protected int variable which means only this class and the subclasses can use this variable
+  
+> protected:
+          unsigned int maxDistance;
+          
+  The code for the base class:
+  
+```
+  namespace ErpamBot
+  {
+  class SensorDriver
+  {
+    protected:
+      unsigned int maxDistance;
+    public:
+      SensorDriver(unsigned int distance) : maxDistance(distance){}
+      virtual unsigned int getDistance();
+  
+  };
+  
+  };
+```
+  
 **NewPingSensor.h**
-- This class is used to control the UltraSonic sensors, the class implements two methods, <b>getDistance()</b> which returns distance from the obstacle in <b>cm</b> and </b>getMedian</b> which returns median from 5 (by default) sensors scans
+- This class is used to control the UltraSonic sensors, the class implements two methods: <br>
+<b>getDistance()</b> which returns distance from the obstacle in <b>cm</b><br>
+
+
+    virtual unsigned int getDistance()
+    {
+      int distance = sensor.ping_cm();
+
+      if (distance <= 0 )
+      {
+        return maxDistance;
+      } else
+      {
+        return distance;
+      }
+    }    
+    
+    
+Distance variable is storing the distance from the obstacle in cm using the method called from new ping library 'ping_cm()'
+> int distance = sensor.ping_cm();
+
+Then we are making sure there are no errors by checking if the distance returned is less than 0
+
+```
+if (distance <= 0 )
+{
+   return maxDistance;
+}
+```
+
+
+<b>getMedian</b> which returns median from 5 sensors scans
+
+<b>Constructor</b> for the class 
+
+<b>Full code for the class</b>
