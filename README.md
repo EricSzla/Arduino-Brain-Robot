@@ -111,9 +111,9 @@
     - [erpam (The main class)](##erpam)
     - AiClass.h  (Class that stores methods for Artificial Intelligence
     - HeadSet.h  (Class used for controlling the robot with the HeadSet)
-    - [NewPingSensor.h (Class used to controll UltraSonic sensors using newPing library)](#npsh)
-    - [distanceSensor.h (Base class for the sensors)](#dsh)
-<a = "dsh"> </a>
+    - <a href = "#npsh">NewPingSensor.h (Class used to control UltraSonic sensors using newPing library)</a>
+    - <a href="#dsh">distanceSensor.h (Base class for the sensors)</a>
+<a  id = "dsh"> </a>
 ## distanceSensor.h
 - This class is used as a base class for sensor drivers, if you want to use another library for your sensor then all you have to do is write a driver for your sensor and  extend this class. </br>
   
@@ -139,8 +139,9 @@
   
   };
 ```
-<a = "npsh"> </a>
-## **NewPingSensor.h**
+<a id = "npsh"> </a>
+
+## NewPingSensor.h
 - This class is used to control the UltraSonic sensors, the class implements two methods getDistance() and getMedian() <br>
 
 ### <b>Constructor</b>
