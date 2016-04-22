@@ -489,3 +489,52 @@ class AiClass
 };
 };
 ```
+
+<a id = "erpammain"> </a>
+
+##erpam.ino
+
+- This class is the main class and this is where we are going to declare and initialize global variables, call and manipulate
+  the classes named above.
+
+  This is also where we are opening the serial port in order to connect via Bluetooth.
+
+###Including header files
+These are the libraries that we need to include:
+- <stdlib.h> which is the header of the general purpose library which includes functions involving memory allocation, process control, conversions and others.
+- <SoftwareSerial.h> to allow serial communication on other digital pins of the Arduino which in our case is the Bluetooth sensor.
+- <NewPing.h> which is the library used in order to use different functions for the Ultrasonic distance sensor.
+
+In C++ we need to include the header files in the main when creating different classes thus, the HeadSet.h, AiClass.h and NewPingSensor.h are included.
+
+```
+#include <stdlib.h>
+#include <SoftwareSerial.h>
+#include <NewPing.h>
+#include "HeadSet.h"
+#include "AiClass.h"
+#include "NewPingSensor.h"
+```
+
+###Constant variables
+These are the constant variables that we are defining:
+
+```
+//Variables for AI
+#define CLOSE 45
+#define TOO_CLOSE 40
+#define MAX_DISTANCE 200
+//Front sensor pins
+#define TRIGGER_PIN 6
+#define ECHO_PIN 7
+//Left sensor pins
+#define LT_PIN 4
+#define LE_PIN 5
+//Right sensor pins
+#define RT_PIN 2
+#define RE_PIN 10
+```
+The first three variables are used for the AI function.
+
+The following variables are used for initializing the three ultrasonic sensors that we are using. The values represent the pins that we are using in the arduino for each sensor.
+
