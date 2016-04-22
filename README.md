@@ -108,11 +108,13 @@
 
 # Section 2: Arduino Code
 - In our Arduino we are going to have five classes stored in separate files with .h extensions ( headers ):
-    - [erpam (The main class)](##erpam)
-    - AiClass.h  (Class that stores methods for Artificial Intelligence
+    - <a href ="#dsh">distanceSensor.h (Base class for the sensors)</a>
+    - <a href ="#npsh">NewPingSensor.h (Class used to control UltraSonic sensors using newPing library)</a>
+    - <a href ="aih">AiClass.h  (Class that stores methods for Artificial Intelligence)</a>
     - HeadSet.h  (Class used for controlling the robot with the HeadSet)
-    - <a href = "#npsh">NewPingSensor.h (Class used to control UltraSonic sensors using newPing library)</a>
-    - <a href="#dsh">distanceSensor.h (Base class for the sensors)</a>
+    - <a href="#erpamain">erpam (The main class)</a>
+    
+    
 <a  id = "dsh"> </a>
 
 ## distanceSensor.h
@@ -282,6 +284,208 @@ class NewPingSensor : public SensorDriver
       }
       
     }
+};
+};
+```
+
+<a id = "npsh"> </a>
+
+## AiClass.h
+- This class is used to control the motors, the class implements five methods: go_forward(), go_backward(), brake(), go_left() and go_right()._</br>
+  Each method will set different speed to the motors in order to achieve its goal.
+  The constructor is empty, as there is nothing to pass or initialize in the method.
+  
+### <b>go_forward()</b>
+This method, first releases the brakes by writing ``LOW`` to pins ``9`` and ``8``. 
+Then we are settings the direction to <b>forward</b> by writing ``HIGH`` to pins ``12`` and ``13``.
+Finally we are writing the speed in this case ``250`` to pin ``11`` which is the right motor and ``200`` to pin ``3`` which is the left motor.
+The speed depends from the motors we have, once of our motors runs slower therefore the difference when writing the speed.
+
+```
+void go_forward()
+    {
+      //brake
+      digitalWrite(9, LOW); //left
+      digitalWrite(8, LOW); //right
+
+      //direction
+      digitalWrite(12, HIGH); //left
+      digitalWrite(13, HIGH); //right
+
+      //speed
+      analogWrite(11, 250); //right
+      analogWrite(3, 200); //left
+
+    }
+```
+
+### <b>go_backward()</b>
+In this method we release the brakes in the same way as in method above, by writing ``LOW`` to pins ``9`` and ``8``. 
+We are settings the direction to <b>backward</b> by writing ``LOW`` to pins ``12`` and ``13``.
+Finally we are writing the speed in this case ``230`` for right motor and ``200`` for left motor.
+
+```
+void go_backward()
+    {
+      //direction
+      digitalWrite(12, LOW); //left
+      digitalWrite(13, LOW); //right
+
+      //brake
+      digitalWrite(9, LOW); //left
+      digitalWrite(8, LOW); //right
+
+      //speed
+      analogWrite(3, 200); //left
+      analogWrite(11, 230); //right
+    }
+```
+
+### <b>brake()</b>
+In this method we turn on the brakes by writing ``HIGH`` to pins ``9`` and ``8``. 
+We are also setting the speed to ``0`` by writing it to pins ``3`` and ``11``.
+
+```
+void brake()
+    {
+      //speed
+      analogWrite(3, 0); //left
+      analogWrite(11, 0); // right
+
+      //brake
+      digitalWrite(9, HIGH); //left
+      digitalWrite(8, HIGH); //right
+    }
+```
+
+### <b>turn_left()</b>
+In order to turn left we have to manipulate the direction of the two motors, we can do it by changing it to opposite direction by writing ``LOW`` to pin ``12`` which is the left motor, and  ``HIGH`` to pin ``13`` which is the right motor.
+If the <b>right motor goes forward</b> and the <b>left motor goes backward</b>, the robot will turn left in place by 90 degrees. 
+**Note that if we call this function the motor will keep turning unless we stop it.**
+
+```
+void turn_left()
+    {
+      //direction
+      digitalWrite(12, LOW); //left
+      digitalWrite(13, HIGH); //right
+
+      //brake
+      digitalWrite(9, LOW); //left
+      digitalWrite(8, LOW); //right
+
+      //speed
+      analogWrite(3, 200); //left
+      analogWrite(11, 220); //right
+    }
+```
+
+### <b>turn_right()</b>
+This method works almost the same way as turn_left() with the difference that we change the <b>left motor to go forward</b> and the <b>right motor to go backward.</b>
+**Note that if we call this function the motor will keep turning unless we stop it.**
+
+```
+void turn_right()
+    {
+      //direction
+      digitalWrite(12, HIGH); //left
+      digitalWrite(13, LOW); //right
+
+      //brake
+      digitalWrite(9, LOW); //left
+      digitalWrite(8, LOW); //right
+
+      //speed
+      analogWrite(3, 200); //left
+      analogWrite(11, 220); //right
+    }
+```
+
+
+### <b>Full code for the class</b>
+So by now our code should look like this:
+
+```
+// Class for AI
+namespace ErpamBot
+{
+class AiClass
+{
+  public:
+    AiClass() {} // Constructor
+
+    void go_forward()
+    {
+      //brake
+      digitalWrite(9, LOW); //left
+      digitalWrite(8, LOW); //right
+
+      //direction
+      digitalWrite(12, HIGH); //left
+      digitalWrite(13, HIGH); //right
+
+      //speed
+      analogWrite(11, 250); //right
+      analogWrite(3, 200); //left
+
+    }
+
+    void go_backward()
+    {
+      //direction
+      digitalWrite(12, LOW); //left
+      digitalWrite(13, LOW); //right
+
+      //brake
+      digitalWrite(9, LOW); //left
+      digitalWrite(8, LOW); //right
+
+      //speed
+      analogWrite(3, 200); //left
+      analogWrite(11, 230); //right
+    }
+    
+    void brake()
+    {
+      //speed
+      analogWrite(3, 0); //left
+      analogWrite(11, 0); // right
+
+      //brake
+      digitalWrite(9, HIGH); //left
+      digitalWrite(8, HIGH); //right
+    }
+
+    void turn_left()
+    {
+      //direction
+      digitalWrite(12, LOW); //left
+      digitalWrite(13, HIGH); //right
+
+      //brake
+      digitalWrite(9, LOW); //left
+      digitalWrite(8, LOW); //right
+
+      //speed
+      analogWrite(3, 200); //left
+      analogWrite(11, 220); //right
+    }
+
+    void turn_right()
+    {
+      //direction
+      digitalWrite(12, HIGH); //left
+      digitalWrite(13, LOW); //right
+
+      //brake
+      digitalWrite(9, LOW); //left
+      digitalWrite(8, LOW); //right
+
+      //speed
+      analogWrite(3, 200); //left
+      analogWrite(11, 220); //right
+    }
+
 };
 };
 ```
