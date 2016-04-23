@@ -541,10 +541,43 @@ The first three variables are used for the AI function.
 
 The following variables are used for initializing the three ultrasonic sensors that we are using. The values represent the pins that we are using in the arduino for each sensor.
 
+###namespace, classes and library
+Here we are using namespace, initializing the instance of the classes and the SoftwareSerial library.
+```
+using namespace ErpamBot;
+using namespace std;
+
+// Initialize the three sensors
+NewPingSensor distanceSensor(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+NewPingSensor sensorLeft(LT_PIN, LE_PIN, MAX_DISTANCE);
+NewPingSensor sensorRight(RT_PIN, RE_PIN, MAX_DISTANCE);
+
+AiClass ai;
+HeadSet hs;
+
+SoftwareSerial BTserial(0, 1);
+```
+Namespaces are used to organize code into logical groups and to prevent name collisions that can occur especially when your code base includes multiple libraries.
+
+When you make a call to using namespace namespace_name, all symbols in that namespace will become visible without adding the namespace prefix. A symbol may be for instance a function, class or a variable.
+
+Because we are using the namespace ErPamBot in all our classes and the built in C++ library routines are kept in the standard namespace (that includes stuff like cout, cin, string, vector, map, etc.) and these tools are used so commonly, we want to call a using declarations in order to avoid typing ErPamBot:: and std:: prefixes constantly.
+> using namespace ErPamBot;
+
+> using namespace std;
+
+When initializing the distance sensor we are passing three parameters: Echo Pin, Trigger Pin and Max Distance. The parameters that we are passing are the constant parameters that we have defined.
+> NewPingSensor distanceSensor(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
+The Arduino hardware has built-in support for serial communication on pins 0 and 1 hence why we are using these values when initializing the SoftwareSerial library.
+> SoftwareSerial BTserial(0, 1);
+
 <a id ="hsh"> </a>
+
 ## HeadSet.h
 
 <a id ="jc"> </a>
+
 # Section 4: Java Code
 - In order to run the java code we will need to download and import the following libraries into our IDE (The IDE that we use and recommend is <a href="https://www.jetbrains.com/idea/">IntelliJ</a>)
     * <a href="http://www.java2s.com/Code/Jar/p/Downloadprocessingcorejar.htm">Processing core.jar</a>(Standard library that comes with Processing IDE)
