@@ -13,9 +13,10 @@
 * [Objective](#objective) </br>
 * [Resources](#useful-resources)</br>
 * [To do](#to-do)</br>
-* [Section 1: Hardware](#section-1:-hardware) </br>
-* [Section 2: Assembly](#section-2:-assembly)</br>
-* [Section 3: Arduino Code](#section-3:-arduino)</br>
+* <a href="hardware">Section 1: Hardware</a> </br>
+* <a href="assembly">Section 2: Assembly</a></br>
+* <a href ="ac">Section 3: Arduino Code</a></br>
+* <a href ="jc">Section 4: Java Code</a></br>
 
 ### Objective:
 - The objective is to build and program an <b>AI</b> robot which can avoid obstacles, by making decisions on its own. <br>
@@ -36,7 +37,7 @@
 - [x] Arduino: Program blueTooth control
 - [x] Make Arduino communicate with Processing using Bluetooth
 
-
+<a id = "hardware"></a>
 # Section 1: Hardware
 **Arduino board (Arduino UNO ATMEGA328P R3 € 26.98**)   
 - A small programmable computer which acts as the head of the robot, allowing us to control its behaviours.
@@ -79,6 +80,7 @@
 
 ![vehicle](https://cdn.sparkfun.com//assets/parts/5/8/2/3/10825-04.jpg)
 
+<a id="assembly"> </a>
 # Section 2: Assembly
 
 **Components**
@@ -106,13 +108,14 @@
 
 ![motor](https://cloud.githubusercontent.com/assets/15609506/13899540/b395d5fa-ede8-11e5-91e5-25da944ef7a0.jpg)
 
-# Section 2: Arduino Code
+<a id ="ac"> </a>
+# Section 3: Arduino Code
 - In our Arduino we are going to have five classes stored in separate files with .h extensions ( headers ):
-    - <a href ="#dsh">distanceSensor.h (Base class for the sensors)</a>
-    - <a href ="#npsh">NewPingSensor.h (Class used to control UltraSonic sensors using newPing library)</a>
-    - <a href ="aih">AiClass.h  (Class that stores methods for Artificial Intelligence)</a>
-    - HeadSet.h  (Class used for controlling the robot with the HeadSet)
-    - <a href="#erpamain">erpam (The main class)</a>
+    - <a href ="#dsh">distanceSensor.h</a> (Base class for the sensors
+    - <a href ="#npsh">NewPingSensor.h</a> (Class used to control UltraSonic sensors using newPing library)
+    - <a href ="aih">AiClass.h</a>  (Class that stores methods for Artificial Intelligence)
+    - <a href="hsh">HeadSet.h</a>  (Class used for controlling the robot with the HeadSet)
+    - <a href="#erpamain">erpam</a> (The main class)
     
     
 <a  id = "dsh"> </a>
@@ -538,3 +541,27 @@ The first three variables are used for the AI function.
 
 The following variables are used for initializing the three ultrasonic sensors that we are using. The values represent the pins that we are using in the arduino for each sensor.
 
+<a id ="hsh"> </a>
+## HeadSet.h
+
+<a id ="jc"> </a>
+# Section 4: Java Code
+- In order to run the java code we will need to download and import the following libraries into our IDE (The IDE that we use and recommend is <a href="https://www.jetbrains.com/idea/">IntelliJ</a>)
+    * <a href="http://www.java2s.com/Code/Jar/p/Downloadprocessingcorejar.htm">Processing core.jar</a>(Standard library that comes with Processing IDE)
+    * <a href="https://github.com/processing/processing-video">Processing video</a> (Standard library that comes with Processing IDE)
+    * <a href="https://github.com/processing/processing/tree/master/java/libraries/serial">Processing serial</a> (Standard library that comes with Processing IDE)
+    * <a href="http://www.sojamo.de/libraries/controlP5/">Processing controlP5</a>
+    * <a href="http://www.sojamo.de/libraries/oscP5/">oscP5</a>
+- In our Java Code we are going to have three classes stored in separate files with .java extensions:
+    - <a href ="#javamain">Main.java </a>(The main class that manipulates other classes)
+    - <a href ="#javabt">RemoteControl.java </a>(Class used to visualize the BT control)
+    - <a href ="javahs">HeadSet.java </a> (Class that visualizes the head set)
+    
+<a id="javamain"> </a>
+## Main.java
+
+<a id="javabt"> </a>
+## RemoteControl.java
+
+<a id="javahs"> </a>
+## HeadSet.java
