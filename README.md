@@ -572,6 +572,75 @@ When initializing the distance sensor we are passing three parameters: Echo Pin,
 The Arduino hardware has built-in support for serial communication on pins 0 and 1 hence why we are using these values when initializing the SoftwareSerial library.
 > SoftwareSerial BTserial(0, 1);
 
+###Global variables
+These are all the global variable that we are using in the program. We are setting these variables as global because we want all the functions to be able to access these variables.
+```
+String BluetoothData; // Stores data sent via bluetooth
+String acc = ""; // Stores data from headset's accelerometer
+int choice = 0; // Variable for menu
+boolean go = false;
+boolean brakeFlag = false;
+
+// Variables used by the sensors
+unsigned int cm = 0;
+unsigned int median = 0; // Front sensor
+unsigned int medianLeft = 0; // Left sensor
+unsigned int medianRight = 0; // Right sensor
+
+//Variables to be used only if ONLY ONE SENSOR is connected
+int obstacleRight = 0;
+int obstacleLeft = 0;
+```
+
+###setup()
+We put code here in the setup because we want the code to run once at the start.
+
+Here we are configuring the specified pins to behave either as an input or an output. We are using pinMode which takes two parameters:
+> pinMode(pin, mode)
+- pin: the number of the pin whose mode you wish to set
+
+- mode: INPUT, OUTPUT, or INPUT_PULLUP. (see https://www.arduino.cc/en/Tutorial/DigitalPins for a more complete description of the functionality.)
+
+```
+  BTserial.begin(9600);
+  Serial.begin(19200);
+  //Setup Channel A
+  pinMode(12, OUTPUT); //Initiates Motor Channel A pin
+  pinMode(9, OUTPUT); //Initiates Brake Channel A pin
+
+  //Setup Channel B
+  pinMode(13, OUTPUT); //Initiates Motor Channel B pin
+  pinMode(8, OUTPUT);  //Initiates Brake Channel B pin
+
+  // Set brakes at start
+  digitalWrite(9, HIGH);
+  digitalWrite(8, HIGH);
+
+  //Setup UltraSonic sensor pins
+  pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(LT_PIN, OUTPUT);
+  pinMode(LE_PIN, INPUT);
+  pinMode(RT_PIN, OUTPUT);
+  pinMode(RE_PIN, INPUT);
+```
+
+If you take a look at the photo below of the Arduino Motor Shield R3 which is the motor shield that we are using for this robot, it indicates what pins we are supposed to use for Motor A and Motor B.
+
+![motorshield_r3_front_450px](https://cloud.githubusercontent.com/assets/15609506/14764058/d2b7cc16-09a1-11e6-88df-bd80ea02f816.jpg)
+
+As you can see, <b>DIR</b> stands for direction, <b>PWM</b> stands for Power Motor and there is also <b>BRAKE</b>. That is why we are using the values above in initiating Motor A and Motor B pins.
+
+Therefore if we want to make the motors go forward, we are going to set pin ``12`` and ``13`` to ``HIGH`` and if we want to make it go backward the we are going to set it to ``LOW``. <i><b>Note that the we have to set the brakes (pins ``8`` and ``9``) to ``LOW`` every time we want the motors to move as we don't want to apply brakes.</i></b> We also need to set the speed (pins ``3`` and ``11``) according to how fast we want the motors to run. <b>Maximum speed is 250.</b>
+
+When we run the program first, we want to apply the brakes as we do not want the robot to be running its motors unless we tell it to do so therefore we are going to set both pin ``8`` and pin ``9`` to ``HIGH``.
+
+```
+digitalWrite(9, HIGH);
+digitalWrite(8, HIGH);
+```
+
+
 <a id ="hsh"> </a>
 
 ## HeadSet.h
