@@ -602,27 +602,30 @@ Here we are configuring the specified pins to behave either as an input or an ou
 - mode: INPUT, OUTPUT, or INPUT_PULLUP. (see https://www.arduino.cc/en/Tutorial/DigitalPins for a more complete description of the functionality.)
 
 ```
-  BTserial.begin(9600);
-  Serial.begin(19200);
-  //Setup Channel A
-  pinMode(12, OUTPUT); //Initiates Motor Channel A pin
-  pinMode(9, OUTPUT); //Initiates Brake Channel A pin
+ void setup() {
+   // put your setup code here, to run once:
+   BTserial.begin(9600);
+   Serial.begin(19200);
+   //Setup Channel A
+   pinMode(12, OUTPUT); //Initiates Motor Channel A pin
+   pinMode(9, OUTPUT); //Initiates Brake Channel A pin
 
-  //Setup Channel B
-  pinMode(13, OUTPUT); //Initiates Motor Channel B pin
-  pinMode(8, OUTPUT);  //Initiates Brake Channel B pin
+   //Setup Channel B
+   pinMode(13, OUTPUT); //Initiates Motor Channel A pin
+   pinMode(8, OUTPUT);  //Initiates Brake Channel A pin
 
-  // Set brakes at start
-  digitalWrite(9, HIGH);
-  digitalWrite(8, HIGH);
+   // Set brakes at start
+   digitalWrite(9, HIGH);
+   digitalWrite(8, HIGH);
 
-  //Setup UltraSonic sensor pins
-  pinMode(TRIGGER_PIN, OUTPUT);
-  pinMode(ECHO_PIN, INPUT);
-  pinMode(LT_PIN, OUTPUT);
-  pinMode(LE_PIN, INPUT);
-  pinMode(RT_PIN, OUTPUT);
-  pinMode(RE_PIN, INPUT);
+   //Setup UltraSonic sensor pins
+   pinMode(TRIGGER_PIN, OUTPUT);
+   pinMode(ECHO_PIN, INPUT);
+   pinMode(LT_PIN, OUTPUT);
+   pinMode(LE_PIN, INPUT);
+   pinMode(RT_PIN, OUTPUT);
+   pinMode(RE_PIN, INPUT);
+ }
 ```
 
 If you take a look at the photo below of the Arduino Motor Shield R3 which is the motor shield that we are using for this robot, it indicates what pins we are supposed to use for Motor A and Motor B.
@@ -640,6 +643,89 @@ digitalWrite(9, HIGH);
 digitalWrite(8, HIGH);
 ```
 
+###loop()
+After creating a setup() function, which initializes and sets the initial values, the loop() function does precisely what its name suggests, and loops consecutively, allowing your program to change and respond. Use it to actively control the Arduino board.
+```
+void loop() {
+  switch (choice)
+  {
+    case 1:
+      bluetoothcontrol(BluetoothData);
+      break;
+    case 2:
+      aifxn();
+      break;
+    case 3:
+      headSetfxn();
+      break;
+  }
+}
+```
+Here we are going to use a switch statement for calling different functions based on the variable <b>choice</b> which is depending on the data received via bluetooth through BTserial which I will be talking about in the next section.
+
+
+###serialEvent()
+This function is called <i>automatically</i> when data is available. This means that this function does not have to be called in main.
+
+```
+void serialEvent()
+{
+  if (BTserial.available())
+  {
+    BluetoothData = BTserial.readStringUntil(',');
+
+    if (BluetoothData.startsWith("1"))
+    {
+      BluetoothData.replace("1", "");
+      choice = 1;
+    } else if (BluetoothData.startsWith("2"))
+    {
+      choice = 2;
+    } else if (BluetoothData.startsWith("3"))
+    {
+      BluetoothData.replace("3", "");
+      acc = "";
+      if (BluetoothData.startsWith("A"))
+      {
+        acc = BluetoothData;
+        acc.replace("A", "");
+      }
+      choice = 3;
+      BTserial.flush();
+    }
+  }
+}
+```
+
+First we get the number of bytes (characters) available for reading from the serial port. This is data that's already arrived and stored in the serial receive buffer.
+>  if (BTserial.available()){}
+
+After receiving data we then read the incoming byte from the serial buffer into an array and terminates after ``,`` is detected. We are storing this in <b>BluetoothData</b>.
+> BluetoothData = BTserial.readStringUntil(',');
+
+We want to check whether the String that we have read starts with 1, 2 or 3 because this will determine the choice for the switch statement in the loop() function. In the example code below x is 1,2 or 3.
+```
+    if (BluetoothData.startsWith("x"))
+    {
+      BluetoothData.replace("x", "");
+      choice = x;
+    }
+```
+If BluetoothData starts with 3, then it means that we want to control the robot using the muse headset that reads brainwaves therefore we are storing the data of the accelerometer to the variable <b>acc</b>.
+```
+    else if (BluetoothData.startsWith("3"))
+    {
+      BluetoothData.replace("3", "");
+      acc = "";
+      if (BluetoothData.startsWith("A"))
+      {
+        acc = BluetoothData;
+        acc.replace("A", "");
+      }
+      choice = 3;
+      BTserial.flush();
+    }
+```
 
 <a id ="hsh"> </a>
 
