@@ -13,10 +13,10 @@
 * [Objective](#objective) </br>
 * [Resources](#useful-resources)</br>
 * [To do](#to-do)</br>
-* <a href="hardware">Section 1: Hardware</a> </br>
-* <a href="assembly">Section 2: Assembly</a></br>
-* <a href ="ac">Section 3: Arduino Code</a></br>
-* <a href ="jc">Section 4: Java Code</a></br>
+* <a href="#hardware">Section 1: Hardware</a> </br>
+* <a href="#assembly">Section 2: Assembly</a></br>
+* <a href ="#ac">Section 3: Arduino Code</a></br>
+* <a href ="#jc">Section 4: Java Code</a></br>
 
 ### Objective:
 - The objective is to build and program an <b>AI</b> robot which can avoid obstacles, by making decisions on its own. <br>
@@ -113,8 +113,8 @@
 - In our Arduino we are going to have five classes stored in separate files with .h extensions ( headers ):
     - <a href ="#dsh">distanceSensor.h</a> (Base class for the sensors
     - <a href ="#npsh">NewPingSensor.h</a> (Class used to control UltraSonic sensors using newPing library)
-    - <a href ="aih">AiClass.h</a>  (Class that stores methods for Artificial Intelligence)
-    - <a href="hsh">HeadSet.h</a>  (Class used for controlling the robot with the HeadSet)
+    - <a href ="#aih">AiClass.h</a>  (Class that stores methods for Artificial Intelligence)
+    - <a href="#hsh">HeadSet.h</a>  (Class used for controlling the robot with the HeadSet)
     - <a href="#erpamain">erpam</a> (The main class)
     
     
@@ -555,7 +555,7 @@ The following variables are used for initializing the three ultrasonic sensors t
 - In our Java Code we are going to have three classes stored in separate files with .java extensions:
     - <a href ="#javamain">Main.java </a>(The main class that manipulates other classes)
     - <a href ="#javabt">RemoteControl.java </a>(Class used to visualize the BT control)
-    - <a href ="javahs">HeadSet.java </a> (Class that visualizes the head set)
+    - <a href ="#javahs">HeadSet.java </a> (Class that visualizes the head set)
     
 <a id="javamain"> </a>
 ## Main.java
