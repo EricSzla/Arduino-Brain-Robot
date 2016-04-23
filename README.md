@@ -727,6 +727,61 @@ If BluetoothData starts with 3, then it means that we want to control the robot 
     }
 ```
 
+###bluetoothcontrol()
+This function allows the robot to be controlled using W, A, S, D keys from the keyboard.
+
+```
+void bluetoothcontrol(String BluetoothData)
+{
+  if (BluetoothData.startsWith("L"))
+  {
+    BluetoothData.replace("L", "");
+    float sSpeed = BluetoothData.toFloat();
+
+    if (sSpeed > 0 )
+    {
+      digitalWrite(12, HIGH);
+
+    } else if (sSpeed < 0)
+    {
+      digitalWrite(12, LOW);
+      sSpeed *= -1;
+    }
+
+    digitalWrite(9, LOW);
+    analogWrite(3, sSpeed);
+  }
+
+  if (BluetoothData.startsWith("R")) {
+
+    BluetoothData.replace("R", "");
+    float sSpeed = BluetoothData.toFloat();
+
+    if (sSpeed > 0 )
+    {
+      digitalWrite(13, HIGH);
+
+    } else if (sSpeed < 0)
+    {
+      digitalWrite(13, LOW);
+      sSpeed *= -1;
+    }
+
+    digitalWrite(8, LOW);
+    analogWrite(11, sSpeed);
+  }
+}
+```
+
+If BluetoothData is starting with L then it means the we are passing the speed of the left motor from processing so we are using pin ``3`` to set left motor speed. If it is starting with R then we are passing the speed of the right motor from processing so we are using pin ``11`` to set right motor speed. We are storing the speed in float variable called <b>sSpeed</b>
+> float sSpeed = BluetoothData.toFloat();
+
+If sSpeed > 0 then that means that we want the motor to go forward hence why we are setting pin ``12`` or ``13`` to ``HIGH``.
+
+If sSpeed < 0 then that means that we want the motor to go backward hence why we are setting pin ``12``or ``13`` to ``LOW`` and we need to multiply sSpeed by -1 as we need a positive number.
+
+As stated in the setup() section, we are going to set pin ``8`` or ``9`` to ``LOW`` if we want the motors to move.
+
 <a id ="hsh"> </a>
 
 ## HeadSet.h
