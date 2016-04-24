@@ -782,6 +782,141 @@ If sSpeed < 0 then that means that we want the motor to go backward hence why we
 
 As stated in the setup() section, we are going to set pin ``8`` or ``9`` to ``LOW`` if we want the motors to move.
 
+###headSetfxn
+This function just calls the go_forward() function from the HeadSet Class.
+We are converting the accelerometer data that we stored in <b>acc</b> and we are passing it to go_forward() function in HeadSet Class. We are going to manipulate all the data that we are receiving in the HeadSet class therefore not much codes are needed here.
+```
+void headSetfxn()
+{
+  float nacc = acc.toFloat();
+  hs.go_forward(nacc);
+}
+```
+
+###aifxn()
+This function is the function for Artificial Intelligence feature. We are going to make the robot move according to the data that the HC-05 distance sensors are receiving.
+```
+void aifxn()
+{
+  ai.go_forward();
+  median = distanceSensor.getMedian();
+  medianLeft = sensorLeft.getMedian();
+  medianRight = sensorRight.getMedian();
+
+  if(medianLeft < TOO_CLOSE / 5)
+  {
+    ai.turn_right();
+    delay(50);
+    ai.brake();
+    ai.turn_left();
+    delay(5);
+  }else if (medianRight < TOO_CLOSE / 5)
+  {
+    ai.turn_left();
+    delay(50);
+    ai.brake();
+    ai.turn_right();
+    delay(10);
+  }
+
+  if (median < CLOSE * 2) // medianFront
+  {
+    ai.brake();
+    delay(500);
+    brakeFlag = true;
+    if(median < TOO_CLOSE/5)
+    {
+      ai.go_backward();
+      delay(200);
+      ai.brake();
+    }
+  }
+  else
+  {
+    brakeFlag = false;
+  }
+
+  if (brakeFlag)
+  {
+    checkObstacles();
+    brakeFlag = false;
+    go = false;
+  }
+
+  aifxn();
+}
+```
+
+
+First thing the robot does is to go forward and gets the medians of the data from all the sensors.
+```
+  ai.go_forward();
+  median = distanceSensor.getMedian();
+  medianLeft = sensorLeft.getMedian();
+  medianRight = sensorRight.getMedian();
+```
+
+We don't want to sides of the robot scratching the wall or other obtacles when it is going forward thus we are going to make it move slightly if the distance to the wall is too near.
+
+If medianLeft is too near then we are turning the robot to the right for 50ms, brake and then left for 5ms so that it can turn back to the direction that it was originally facing.
+
+If medianRight is too near the we are turning the robot to the left for 50ms, brake, and then right for the same reason as above. Notice that we are using 10ms here and 5ms in the previous if statement. This is because the powers in the motors are different therefore the motor speeds are set differently.
+```
+ if (medianLeft < TOO_CLOSE / 5)
+ {
+   ai.turn_right();
+   delay(50);
+   ai.brake();
+   ai.turn_left();
+   delay(5);
+ } else if (medianRight < TOO_CLOSE / 5)
+ {
+   ai.turn_left();
+   delay(50);
+   ai.brake();
+   ai.turn_right();
+   delay(10);
+ }
+```
+
+Now we are dealing with the front sensor which is also going to involve the left and right sensors. If median is close enough then we brake the motors and set <b>brakeFlag</b> to <b>True</b> (here we are setting it to CLOSE * 2 because the motors are running fast so to ensure that the robot won't bump into the obstacle, were setting the stopping distance further).
+
+if the obstacle is very close, then the robot most certainly will hit the obstacle when turning left or right. To avoid this we are going to make it go backward for 200ms.
+
+
+```
+  if (median < CLOSE * 2) // medianFront
+  {
+    ai.brake();
+    delay(500);
+    brakeFlag = true;
+    if (median < TOO_CLOSE / 5)
+    {
+      ai.go_backward();
+      delay(200);
+      ai.brake();
+    }
+  }
+```
+If there are no obstacles on the way then we are setting <b>brakeFlag</b> to <b>False</b>. That means that the robot can keep on going forward as it won't execute the <b>if(brakeFlag)</b> statement.
+
+If brakeFlag is set to true, the we are calling the <b>checkObstacles()</b> function which is a function in charge of making decisions after detecting an obstacle in front. After that we are setting the brakeFlag to false because we only want to call the checkObstacles() once and it is when the robot has detected an obstacle from the front sensor.
+```
+  else
+  {
+    brakeFlag = false;
+  }
+
+  if (brakeFlag)
+  {
+    checkObstacles();
+    brakeFlag = false;
+    go = false;
+  }
+
+  aifxn();
+```
+
 <a id ="hsh"> </a>
 
 ## HeadSet.h
