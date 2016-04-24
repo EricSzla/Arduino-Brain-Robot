@@ -115,7 +115,7 @@
     - <a href ="#npsh">NewPingSensor.h</a> (Class used to control UltraSonic sensors using newPing library)
     - <a href ="#aih">AiClass.h</a>  (Class that stores methods for Artificial Intelligence)
     - <a href="#hsh">HeadSet.h</a>  (Class used for controlling the robot with the HeadSet)
-    - <a href="#erpamain">erpam</a> (The main class)
+    - <a href="#erpammain">erpam</a> (The main class)
     
     
 <a  id = "dsh"> </a>
@@ -1009,6 +1009,104 @@ If <b>neither</b> of the left sensor and right sensor has detected any obstacles
 <a id ="hsh"> </a>
 
 ## HeadSet.h
+- This class is for manipulating the robot based on the data that we are receiving from the accelerometer of the headset. How the accelerometer works is it is giving values based on how you are tilting your head (if you tilt your head to the left it will return negative values, and if you tilt your head to the right it will return positive values).<b><i> The more you tilt your head, the bigger the value its gonna return for positive values, and the smaller the values for negative values.</b></i>
+
+###go_forward()
+This is the only method in this class. And in this class we are only changing the direction of the robot based on the accelerometer values the we are receiving. This value is passed as a parameter and we are calling it <b>acc</b>.
+> void go_forward(float acc)
+
+<b><i>Note that pin ``12`` and ``13`` is always set to ``HIGH`` and pin ``8`` and ``9`` is always set to ``LOW`` throughout the whole function because we want the motors to keep on running. We are only changing the direction by manipulating the values in pin ``3`` and pin ``11``.</b></i>
+
+If acc is less than -150, then we want the robot to turn left so we are setting pin ``11`` to ``220`` and pin ``3`` to ``50``. This is because if we want to turn the robot to the left then the right motor should be faster than the left motor.
+```
+        if (acc < -150)
+        {
+          digitalWrite(12, HIGH);
+          digitalWrite(13, HIGH);
+
+          digitalWrite(9, LOW);
+          digitalWrite(8, LOW);
+
+          analogWrite(11, 220); // RIGHT
+          analogWrite(3, 50); // LEFT
+        }
+```
+If acc is more than 150, then we want the robot to turn right so we are setting pin ``11`` to ``50`` and pin ``3`` to ``200``. The difference in values in the pins when turning left and right is due to the difference in motor power.
+```
+        else if (acc > 150)
+        {
+          digitalWrite(12, HIGH);
+          digitalWrite(9, LOW);
+          digitalWrite(13, HIGH);
+          digitalWrite(8, LOW);
+
+          analogWrite(11, 50); // RIGHT
+          analogWrite(3, 200); // LEFT
+        }
+```
+If acc is more the -150 and less than 150 then that means that our head is in neutral position so we want the robot to go straight so we are setting pin ``11``to ``200`` and pin ``3`` to ``170``. The left motor is more powerful than the right motor so we want to set the left motor with lower speed so that they will have the same speed.
+```
+        else if (acc > -150 && acc < 150 && acc != 0)
+        {
+          digitalWrite(12, HIGH);
+          digitalWrite(9, LOW);
+          digitalWrite(13, HIGH);
+          digitalWrite(8, LOW);
+
+          analogWrite(11, 200);
+          analogWrite(3, 170);
+        }
+```
+
+###Full code for class
+So by now, our code must look like this:
+```
+// Class for AI
+namespace ErpamBot
+{
+class HeadSet
+{
+
+  private:
+
+  public:
+    HeadSet() {} // Constructor
+
+    void go_forward(float acc)
+    {
+        if (acc < -150)
+        {
+          digitalWrite(12, HIGH);
+          digitalWrite(13, HIGH);
+
+          digitalWrite(9, LOW);
+          digitalWrite(8, LOW);
+
+          analogWrite(11, 220); // RIGHT
+          analogWrite(3, 50); // LEFT
+        } else if (acc > 150)
+        {
+          digitalWrite(12, HIGH);
+          digitalWrite(9, LOW);
+          digitalWrite(13, HIGH);
+          digitalWrite(8, LOW);
+
+          analogWrite(11, 50); // RIGHT
+          analogWrite(3, 200); // LEFT
+        } else if (acc > -150 && acc < 150 && acc != 0)
+        {
+          digitalWrite(12, HIGH);
+          digitalWrite(9, LOW);
+          digitalWrite(13, HIGH);
+          digitalWrite(8, LOW);
+
+          analogWrite(11, 200);
+          analogWrite(3, 170);
+        }
+      }
+};
+};
+```
 
 <a id ="jc"> </a>
 
