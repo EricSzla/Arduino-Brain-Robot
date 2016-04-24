@@ -21,7 +21,7 @@
 ### Objective:
 - The objective is to build and program an <b>AI</b> robot which can avoid obstacles, by making decisions on its own. <br>
   The project will also implement <b>Bluetooth Control</b> using Processing IDE.</br>
-  The robot can also be controlled using a head set that reads your <b>brainwaves</b></br>
+  The robot can also be controlled using a head set that reads your <b>brainwaves.</b></br>
   
 ### Useful resources:
 **Arduino Library:** https://www.arduino.cc/en/Reference/HomePage</br>
@@ -39,17 +39,17 @@
 
 <a id = "hardware"></a>
 # Section 1: Hardware
-**Arduino board (Arduino UNO ATMEGA328P R3 € 26.98**)   
+**Arduino board (Arduino UNO ATMEGA328P R3 € 26.98)**   
 - A small programmable computer which acts as the head of the robot, allowing us to control its behaviours.
 
 ![uno-r3-800](https://cloud.githubusercontent.com/assets/15609881/12980044/8daa8e68-d0d2-11e5-8463-61770e85892a.jpg)
 
-**Distance sensor (HC-SR04 Ultrasonic Sensor € 4.49**)
+**Distance sensor (HC-SR04 Ultrasonic Sensor € 4.49)**
 - A sensor which measures the distance from the nearest objects by sending and recieving waves. This sensor allows us to program the robot to take appropriate action if there is an obstacle within the range.
 
 ![ultrasonic](https://cloud.githubusercontent.com/assets/15609881/12980095/c76dedf2-d0d2-11e5-9322-692a192e6f21.jpg)
 
-**AWG Jumper Wires (HC-SR04 Ultrasonic Sensor € 4.95**)
+**AWG Jumper Wires (HC-SR04 Ultrasonic Sensor € 4.95)**
 - Wires are used to connect different components together.
 
 ![wires](http://www.elecfreaks.com/store/images/BBC_jumper_01.jpg)
@@ -59,26 +59,32 @@
 
 ![BT](http://www.micro4you.com/store/images/source/Bluetooth_Module_bb.png)
 
-**Battery holder (€ 1.29**)
+**Battery holder (€ 1.29)**
 - Robots, like humans need energy in order to operate, they consume their energy from batteries. Battery box allow as to connect the batteries to the device.
 
 ![Battery Holder](http://d310a9hpolx59w.cloudfront.net/product_photos/503038/8-cell_original.JPG)
 
-**Prototyping board (€ 5.95**)
+**Prototyping board (€ 5.95)**
 - Prototyping board plays an unique part in planning stage.
 
 ![PBoard](https://upload.wikimedia.org/wikipedia/commons/7/73/400_points_breadboard.jpg)
 
-**Motor controller (Arduino Motor Shield R3 € 44.00**)
+**Motor controller (Arduino Motor Shield R3 € 44.00)**
 - Controller which allows us to control the motors of the vehicle kit, neceserry in order to program/controll the speed and turnings of the robot.
 
 ![Motor Controller](https://www.arduino.cc/en/uploads/Main/MotorShield_R3_Front_450px.jpg)
 
 
-**Vehicle kit (Magician Chassis € 44.00**)
+**Vehicle kit (Magician Chassis € 44.00)**
 - The base for the robot, which includes motors and wheels, supports the rest of hardware, compiled together forms a fully operational robot.
 
 ![vehicle](https://cdn.sparkfun.com//assets/parts/5/8/2/3/10825-04.jpg)
+
+##Optional
+**Muse HeadBand (€330)**
+- A device which can be connected via bluetooth, the device reads different brain waves and sends it over to your laptop, in this case it will allow us to move the robot with concetration level and turn the robot when user titlts the head thanks to accelerometer which is build into the device.
+
+![muse](https://cloud.githubusercontent.com/assets/15609881/14769242/dc8a98b2-0a4c-11e6-8e9b-74887e375c96.png)
 
 <a id="assembly"> </a>
 # Section 2: Assembly
