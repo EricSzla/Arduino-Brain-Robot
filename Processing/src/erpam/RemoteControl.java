@@ -47,13 +47,15 @@ public class RemoteControl{
     {
 
         papplet.background(0);
-
         leftMotorSlider.show();
         rightMotorSlider.show();
-        turningSlider.show();
         papplet.textSize(24);
         papplet.textAlign(papplet.CENTER);
+        papplet.fill(255);
         papplet.text("Gear: " + gear, papplet.width/2,papplet.height/2);
+        papplet.rect(papplet.width/10,papplet.height/10,200,50);
+        papplet.fill(0);
+        papplet.text("Menu",papplet.width/10,papplet.height/10 + 10);
     }
 
     public void update(float speed, float leftspeed)

@@ -81,7 +81,12 @@ public class Main extends PApplet {
                 BT.render(currentGear);
                 break;
             case 2:
-
+                background(0);
+                fill(255);
+                text("Press any key to start..", width/2,height/2);
+                rect(width/10,height/10,200,50);
+                fill(0);
+                text("Menu",width/10,height/10 + 10);
                 break;
             case 3:
 
@@ -90,6 +95,11 @@ public class Main extends PApplet {
                 //headSet.updateWheel(200);
                 //headSet.render();
                 //headSet.updatePetrol(pdir);
+
+                fill(255);
+                rect(width/10,height/10,200,50);
+                fill(0);
+                text("Menu",width/10,height/10 + 10);
                 break;
             default:
                 menu();
@@ -98,22 +108,35 @@ public class Main extends PApplet {
     }
 
     public void mouseClicked() {
-        // To be completed
-        choice = 1;
-        //choice = 2;
-        //choice = 3;
+
+        if(choice == 0) {
+            if (mouseX >= width / 2 - 100 && mouseX <= width / 2 + 100) // Check if mouse is in the middle
+            {
+                if (mouseY >= height / 2 - 25 && mouseY <= height / 2 + 25) // Check if mouse is in the first square
+                {
+                    choice = 1;
+                } else if (mouseY >= height / 2 + 75 && mouseY <= height / 2 + 125) {
+                    choice = 2;
+                } else if (mouseY >= height / 2 + 175 && mouseY <= height / 2 + 225) {
+                    choice = 3;
+                }
+            }
+        }else
+        {
+            // If go back to menu button pressed, change the choice.
+            if(mouseX < width/10 + 100 && mouseX > width/10 - 100)
+            {
+                if(mouseY < height/10 +25 && mouseY > height/10 - 25)
+                {
+                    choice = 0;
+                }
+            }
+        }
     }
 
     public void menu() {
         background(0);
         image(erpam, width/2,erpam.height);
-
-        if (x < width / 6) {
-            x += 10;
-        }
-
-        fill(255);
-        text("---> TERRITORY MAPPING", x, height / 3);
 
         rect(width/2,height/2,200,50);
         rect(width/2,height/2 + 100, 200, 50);
@@ -124,7 +147,6 @@ public class Main extends PApplet {
         text("Bluetooth Control", width/2,height/2);
         text("AI Robot", width/2, height/2 + 100);
         text("Headset Control", width/2, height/2 + 200);
-
     }
 
     public void keyPressed() {
