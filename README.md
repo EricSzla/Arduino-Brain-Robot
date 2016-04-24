@@ -1156,7 +1156,6 @@ class HeadSet
   ```
     Serial myPort;
     RemoteControl BT;
-  
   ```
   
   Next, we are declaring variables for the menu, ``PImage`` is a type of variable that allow us to store the image for the menu.
@@ -1205,6 +1204,59 @@ class HeadSet
     int sdir = 0;
   ```
     
+    
+<a id ="settings"> </a>
+###Settings
+We are going to use that method only for one purpose to set the screen size of our application. We can do it using a method from processing.core library called size() which takes two parameters width and height. The methods passes as paremeters return the width size and height size of the screen we are using, therefor the size will be set to fullscreen </br>
+
+```
+public void settings() {
+        size(displayWidth, displayHeight);
+    }
+```
+
+<a id="setup"></a>
+###Setup
+Setup is the place where we are initializing the ports,classes and variables. This is the code that will run <b>only once</b> at the start of the program.</br>
+
+The first thing we want to do is initialize the blueetooth port to communicate with the Arduino, in order to do that we use the variable alreade declared before ``myPort`` and set it to ``new Serial(this, portName, 9600)`` the parameters that we are passing are ``this`` or the PApplet that the main class extends, ``portName`` which is set to ``Serial.list()[2];`` and ``9600`` which is the baud rate.</br>
+<b>Please note that the in your case the value in ``Serial.list()[2]`` may be different, in order to check what value you should pass use ``printArray(Serial.list())`` which will print the paired devices, and then set the value in Serial.list()[<b>X</b>] to the one that matches the arduino bluetooth module.</b></br>
+
+The next thing we are doing is setting the ``rectMode``, ``frameRate``, loading the image to ``erpam`` variable and initializing the class ``BT``, to which we are passing ``this`` which means we are passing the PApplet.</br>
+
+```
+     public void setup() {
+        printArray(Serial.list()); // Prints the serial lists
+        String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
+
+        try {
+            myPort = new Serial(this, portName, 9600); // Initialize myPort and set the bit rate
+        }catch (RuntimeException e)
+        {
+            e.printStackTrace();
+        }
+        
+        rectMode(CENTER);
+        frameRate(60);
+        erpam = loadImage("erpam.png");
+        BT = new RemoteControl(this);
+        smooth();
+        
+ ```
+<b>And the optional step, if you have the headSet<b> is to initialize the oscp5 connection and the class for the headSet.</br>
+ 
+ ```
+        // Headset Connection
+        try {
+            oscp5 = new OscP5(this, 5000);
+            headSet = new HeadSet(this);
+        }catch (RuntimeException e)
+        {
+            e.printStackTrace();
+        }
+    }
+```
+
 <a id="javabt"> </a>
 ## RemoteControl.java
 
