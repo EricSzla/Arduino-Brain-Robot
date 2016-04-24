@@ -291,7 +291,7 @@ class NewPingSensor : public SensorDriver
 };
 ```
 
-<a id = "npsh"> </a>
+<a id = "aih"> </a>
 
 ## AiClass.h
 - This class is used to control the motors, the class implements five methods: go_forward(), go_backward(), brake(), go_left() and go_right()._</br>
@@ -493,7 +493,7 @@ class AiClass
 };
 ```
 
-<a id = "erpammain"> </a>
+<a id = "erpamain"> </a>
 
 ##erpam.ino
 
@@ -1124,7 +1124,87 @@ class HeadSet
     
 <a id="javamain"> </a>
 ## Main.java
-
+- Main class is the class where we are going to establish our bluetooth connections with both arduino robot and the headset and initialize and manipulate classes.
+- The methods we are going to use in main are as follow: 
+  *  <a href="#settings">Settings</a> - Used to set the screen size
+  *  <a href="#setup">Setup</a> - Used to initialize all that is to be executed only once at the start of the program
+  *  <a href="#draw">Draw</a> - A loop that is executed 60 times a second, used to constantly update our program
+  *  <a href="#mouse">MouseClicked</a> - Used to handle the event when mouse is clicked
+  *  <a href="#javamenu">Menu</a> - Method to draw a menu for our program
+  *  <a href="#keypressed">KeyPressed</a> - Used to handle the event when key is pressed 
+  *  <a href="#turning">Turning</a> - Used to turn the robot while in bluetooth control mode
+  *  <a href="#acceleration">Acceleration</a> - Used to set acceleration of the robot when in bluetooth control mode
+  *  <a href="#oscevent">oscEvent</a> - Event handler for the headset which recieves the data and takes appropriate action
+  
+  If we have the libraries downloaded and added to our IDEA (<a href="https://www.jetbrains.com/help/idea/2016.1/configuring-module-dependencies-and-libraries.html?origin=old_help">How to add libraries in IntelliJ</a>) then the first thing we are going to do is import those libraries using ``import`` which will allow us to use or the methods or functions located in those libraries.
+  
+  ```
+  package erpam;
+  import processing.core.*;
+  import processing.core.PImage;
+  import processing.video.*;
+  import processing.serial.*;
+  import oscP5.*;
+  ```
+  
+  ###Global Variables
+  Next we are declaring the <b>global variables</b>, which means we can access those variables from every method in the package.
+  
+  The variable ``myPort`` of a type ``Serial`` which is a method imported from the ``processing.serial.*`` library, allow us to set up the bluetooth connection with the robot.</br>
+  The variable ``BT`` is declared here as type ``RemoteControl``, which is one of our classes, so that means a variable BT is <b>an instance of a class RemoteControl</b>.
+  
+  ```
+    Serial myPort;
+    RemoteControl BT;
+  
+  ```
+  
+  Next, we are declaring variables for the menu, ``PImage`` is a type of variable that allow us to store the image for the menu.
+  ``choice`` will be used to record which functionality the user chooses to use i.e. bluetooth control, headset control etc.
+  
+  ```
+    PImage erpam;  // Menu image
+    int choice = 0;         // User choice (menu)
+ ```
+ 
+ The next, global variables are the variables used for both left and right motors and the current gear.
+ The variables for the motors are initialized to ``0`` as at the beging the motor speeds are 0.
+ Also the ``currentGear`` is set to `N` which stands for <b>Neutral</b> this will change depending if user is going forward or backward, then the gear will change to either ``D`` which stands for <b>Drive</b> or ``R`` which stands for <b>Reverse</b>
+ 
+ ```
+    float rightspeed = 0;   // Right speed of the motor
+    float leftspeed = 0;    // Left speed of the motor
+    char currentGear = 'N';
+ ```
+ 
+ And the last variables we have to declare are the variables used for the headSet.</br>
+ <b>**Note** this is an optional step and if you are following along and don't feel like buying the headSet then ignore this code.</b>
+ 
+ In order to establish connection with the headset, we have to turn on the headSet then pair it with your PC/Laptop bluetooth, and then open your terminal and use the command  ``muse-io --device Muse --osc osc.udp://localhost:5000`` to connect to it. </br>
+ <b>Please note the ``localhost:5000`` at the end, which is the port number 5000, if you are using different port, make sure to change it in the setup() method where we are initializing the connections</b></br>
+ 
+ The variable ``oscp5`` of type ``OscP5`` is imported from oscP5 library, which allows us for the connection with the headSet.</br>
+ The next two variables ``cVar`` and ``aVar`` are <b>float</b> variables which store the data sent from the headSet (concetration and accelerometer data).</br>
+ The variable ``checkA`` and ``checkcVar`` are used to compare the differences in recieved data later on.</br>
+ <b>Please note that the variable ``checkA`` is initialized to 800 at the start</b>.</br>
+ The ``passVar`` of type ``String`` is the variable we are going to use to pass the data to Arduino, the content of that variable will depend on the data we recieve from the headSet.</br>
+ The variable ``headSet`` of type ``HeadSet`` is an instance of the HeadSet class, whenever headSet variable is used that means it refers to that class.
+ The last two variables ``pdir`` and ``sdir`` are the variables we are going to pass the the HeadSet method, will be explained in more detail when we get to the oscEvent method.
+ 
+ ```
+    // Use this code if HeadSet connected
+    //  muse-io --device Muse --osc osc.udp://localhost:5000
+    OscP5 oscp5;
+    float cVar = 0; // Concetration data
+    float aVar = 0; // Acceleroometer data
+    float checkA = 800;
+    float checkcVar = 0;
+    String passVar = "";
+    HeadSet headSet;
+    int pdir = 0;
+    int sdir = 0;
+  ```
+    
 <a id="javabt"> </a>
 ## RemoteControl.java
 
