@@ -504,9 +504,9 @@ class AiClass
 
 ###Including header files
 These are the libraries that we need to include:
-- <stdlib.h> which is the header of the general purpose library which includes functions involving memory allocation, process control, conversions and others.
-- <SoftwareSerial.h> to allow serial communication on other digital pins of the Arduino which in our case is the Bluetooth sensor.
-- <NewPing.h> which is the library used in order to use different functions for the Ultrasonic distance sensor.
+- stdlib.h which is the header of the general purpose library which includes functions involving memory allocation, process control, conversions and others.
+- SoftwareSerial.h to allow serial communication on other digital pins of the Arduino which in our case is the Bluetooth sensor.
+- NewPing.h which is the library used in order to use different functions for the Ultrasonic distance sensor.
 
 In C++ we need to include the header files in the main when creating different classes thus, the HeadSet.h, AiClass.h and NewPingSensor.h are included.
 
@@ -597,6 +597,7 @@ We put code here in the setup because we want the code to run once at the start.
 
 Here we are configuring the specified pins to behave either as an input or an output. We are using pinMode which takes two parameters:
 > pinMode(pin, mode)
+
 - pin: the number of the pin whose mode you wish to set
 
 - mode: INPUT, OUTPUT, or INPUT_PULLUP. (see https://www.arduino.cc/en/Tutorial/DigitalPins for a more complete description of the functionality.)
@@ -901,6 +902,8 @@ if the obstacle is very close, then the robot most certainly will hit the obstac
 If there are no obstacles on the way then we are setting <b>brakeFlag</b> to <b>False</b>. That means that the robot can keep on going forward as it won't execute the <b>if(brakeFlag)</b> statement.
 
 If brakeFlag is set to true, the we are calling the <b>checkObstacles()</b> function which is a function in charge of making decisions after detecting an obstacle in front. After that we are setting the brakeFlag to false because we only want to call the checkObstacles() once and it is when the robot has detected an obstacle from the front sensor.
+
+We are then calling the function recursively as we want the function to run all the time. The only time we want this to stop is when we turn the program off.
 ```
   else
   {
@@ -915,6 +918,92 @@ If brakeFlag is set to true, the we are calling the <b>checkObstacles()</b> func
   }
 
   aifxn();
+```
+
+###checkObstacles
+This function is used in the aifxn() and is responsible for the necessary actions of the robot based on the scanned data from the HC-05 distance sensors. <b><i>Note that this function is only called when the robot has detected an obstacle in front. We want to check the left and right sensors in order for the robot to decide which direction its taking next.</b></i>
+```
+void checkObstacles()
+{
+  median = distanceSensor.getMedian();
+  medianLeft = sensorLeft.getMedian();
+  medianRight = sensorRight.getMedian();
+
+  if (medianLeft < TOO_CLOSE && medianRight < TOO_CLOSE)
+  {
+    ai.go_backward();
+    checkObstacles();
+  } else if (medianLeft < TOO_CLOSE && medianRight > TOO_CLOSE)
+  {
+
+    ai.turn_right();
+    delay(270);
+  } else if (medianLeft > TOO_CLOSE && medianRight < TOO_CLOSE)
+  {
+
+    ai.turn_left();
+    delay(220);
+  } else if (medianLeft > TOO_CLOSE && medianRight > TOO_CLOSE)
+  {
+    int r = random(2, 10);
+    if (r % 2 == 0)
+    {
+      ai.turn_left();
+      delay(220);
+    } else if (r % 2 != 0)
+    {
+      ai.turn_right();
+      delay(270);
+    }
+  }
+}
+```
+
+First it gets the median distance from the three distance sensors: Front, Left and Right. The robot will use these variables in order to make decisions.
+```
+  median = distanceSensor.getMedian();
+  medianLeft = sensorLeft.getMedian();
+  medianRight = sensorRight.getMedian();
+```
+If there are obstacles <b>both</b> in the left and the right of the robot, then we want the robot to reverse as there are no other places to go. We then want to call checkObstacles() function recursively in order for the robot to keep on reversing until there's no more obstacle in either left or right.
+```
+  if (medianLeft < TOO_CLOSE && medianRight < TOO_CLOSE)
+  {
+    ai.go_backward();
+    checkObstacles();
+  }
+```
+Otherwise, if there is an obstacle <b>only</b> in the <b>left</b> then we are going to make the robot turn 90 degrees to the right. This is done by turning it to the right for 270ms.
+
+If there is an obstacle <b>only</b> in the <b> right</b> then we are going to make the robot turn 90 degrees to the left. This is done by turning it to the left for 220ms (We are turning them with different times due to the motor power difference).
+```
+  else if (medianLeft < TOO_CLOSE && medianRight > TOO_CLOSE)
+  {
+
+    ai.turn_right();
+    delay(270);
+  } else if (medianLeft > TOO_CLOSE && medianRight < TOO_CLOSE)
+  {
+
+    ai.turn_left();
+    delay(220);
+  }
+```
+If <b>neither</b> of the left sensor and right sensor has detected any obstacles, then we are making the robot turn left or right <b>randomly</b> as we want the robot to make its own decisions.
+```
+  else if (medianLeft > TOO_CLOSE && medianRight > TOO_CLOSE)
+  {
+    int r = random(2, 10);
+    if (r % 2 == 0)
+    {
+      ai.turn_left();
+      delay(220);
+    } else if (r % 2 != 0)
+    {
+      ai.turn_right();
+      delay(270);
+    }
+  }
 ```
 
 <a id ="hsh"> </a>
