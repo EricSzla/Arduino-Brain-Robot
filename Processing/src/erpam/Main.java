@@ -1,5 +1,4 @@
 package erpam;
-
 import processing.core.*;
 import processing.core.PImage;
 import processing.video.*;
@@ -15,8 +14,7 @@ public class Main extends PApplet {
     // For Arduino connection
     Serial myPort;
     RemoteControl BT;
-
-    Movie trailer; // Background movie
+    Kinect kinect;
 
     PImage erpam;  // Menu image
     int x = 0;     // Used for animation in menu
@@ -38,13 +36,19 @@ public class Main extends PApplet {
     float checkcVar = 0;
     int pdir = 0;
     int sdir = 0;
+    int wdir = 0;
 
     public void settings() {
         size(displayWidth, displayHeight);
+
     }
 
     public void setup() {
+        rectMode(CENTER);
+
         printArray(Serial.list()); // Prints the serial lists
+
+        // Start the Bluetooth port
         String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
 
         try {
@@ -54,6 +58,14 @@ public class Main extends PApplet {
             e.printStackTrace();
         }
 
+        frameRate(60);
+        erpam = loadImage("erpam.png");
+
+        BT = new RemoteControl(this);
+        smooth();
+
+        kinect = new Kinect(this);
+
         // Headset Connection
         try {
             oscp5 = new OscP5(this, 5000);
@@ -62,14 +74,6 @@ public class Main extends PApplet {
         {
             e.printStackTrace();
         }
-
-        rectMode(CENTER);
-        frameRate(60);
-        erpam = loadImage("erpam.png");
-        BT = new RemoteControl(this);
-        smooth();
-
-
     }
 
     public void draw() {
@@ -92,15 +96,17 @@ public class Main extends PApplet {
                 break;
             case 3:
                 headSet.updateSpeedo(sdir);
-                headSet.updateWheel(200);
-                headSet.render();
                 headSet.updatePetrol(pdir);
+                headSet.render();
+
 
                 fill(255);
                 rect(width/10,height/10,200,50);
                 fill(0);
                 text("Menu",width/10,height/10 + 10);
                 break;
+            case 4:
+                kinect.render();
             default:
                 menu();
         }
@@ -187,6 +193,8 @@ public class Main extends PApplet {
             myPort.write("1L" + 0 + ",");
             myPort.write("1R" + 0 + ",");
         }
+
+
     }
 
     public void turning(char value) {
@@ -253,21 +261,21 @@ public class Main extends PApplet {
                 System.out.println("C: " + cVar);
             }
 
+            if(headSet.petrol == false) {
+                if (msg.checkAddrPattern("/muse/elements/experimental/mellow") == true) {
 
-            if(msg.checkAddrPattern("/muse/elements/experimental/mellow") == true)
-            {
-
-                System.out.println("Petrol: " + headSet.petrol);
-                float mVar = msg.get(0).floatValue();
-                if(headSet.petrol == false) {
+                    System.out.println("Petrol: " + headSet.petrol);
+                    float mVar = msg.get(0).floatValue();
+                    // if (headSet.petrol == false) {
                     System.out.println("Mellow: " + mVar);
                     if (mVar == 1) {
                         pdir = 1;
                     } else {
                         pdir = 3;
                     }
-                }
+                    //  }
 
+                }
             }
 
 
@@ -278,13 +286,14 @@ public class Main extends PApplet {
                 headSet.checkPetrol = true;
 
                 if (msg.checkAddrPattern("/muse/acc") == true) {
-                    aVar = (float)msg.get(2).floatValue();
+                    aVar = msg.get(2).floatValue();
 
                     if ((aVar < -100 && (checkA > -150 && checkA < 150) || (aVar < -150 && checkA > 150) || ((aVar > -150 && aVar < 150) && checkA < -150) || (aVar > -150 && aVar < 150) && checkA > 150) || (aVar > 150 && (checkA < 150 && checkA > -150)) || (aVar > 150 && checkA < -150)) {
                         passVar = "3A" + aVar + ",";
                         headSet.pass(myPort, passVar);
                         checkA = aVar;
                         checkcVar = cVar;
+                        headSet.updateWheel(aVar);
                     }
                 }
 
