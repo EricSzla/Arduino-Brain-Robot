@@ -75,6 +75,7 @@ public class Main extends PApplet {
     public void draw() {
         switch (choice) {
             case 0:
+                textSize(12);
                 menu();
                 break;
             case 1:
@@ -87,14 +88,13 @@ public class Main extends PApplet {
                 rect(width/10,height/10,200,50);
                 fill(0);
                 text("Menu",width/10,height/10 + 10);
+
                 break;
             case 3:
-
-                // Consider using those methods for headset
-                //headSet.updateSpeedo(sdir);
-                //headSet.updateWheel(200);
-                //headSet.render();
-                //headSet.updatePetrol(pdir);
+                headSet.updateSpeedo(sdir);
+                headSet.updateWheel(200);
+                headSet.render();
+                headSet.updatePetrol(pdir);
 
                 fill(255);
                 rect(width/10,height/10,200,50);
@@ -104,11 +104,9 @@ public class Main extends PApplet {
             default:
                 menu();
         }
-
     }
 
     public void mouseClicked() {
-
         if(choice == 0) {
             if (mouseX >= width / 2 - 100 && mouseX <= width / 2 + 100) // Check if mouse is in the middle
             {
@@ -136,7 +134,17 @@ public class Main extends PApplet {
 
     public void menu() {
         background(0);
+        BT.leftMotorSlider.hide();
+        BT.rightMotorSlider.hide();
+
         image(erpam, width/2,erpam.height);
+
+        if (x < width / 6) {
+            x += 10;
+        }
+
+        fill(255);
+        text("---> TERRITORY MAPPING", x, height / 3);
 
         rect(width/2,height/2,200,50);
         rect(width/2,height/2 + 100, 200, 50);
@@ -173,28 +181,29 @@ public class Main extends PApplet {
             myPort.write("1R" + rightspeed + ",");
 
             BT.update(rightspeed, leftspeed);
+        }else if(choice == 3)
+        {
+            // Emergency stop for headSet
+            myPort.write("1L" + 0 + ",");
+            myPort.write("1R" + 0 + ",");
         }
-
-
     }
 
     public void turning(char value) {
         if (value == 'A') {
             if (rightspeed >= 0 && leftspeed >= 50) {
-                rightspeed = 220;
-                //rightspeed = 200;
+                rightspeed = 250;
                 leftspeed -= 50;
             } else if (rightspeed < 0 && leftspeed < 0) {
-                rightspeed = -200;
+                rightspeed = -230;
                 leftspeed += 50;
             }
         } else if (value == 'D') {
             if (rightspeed >= 50 && leftspeed >= 0) {
-                //leftspeed = 170;
                 leftspeed = 200;
                 rightspeed -= 50;
             } else if (rightspeed < 0 && leftspeed < 0) {
-                leftspeed = -190;
+                leftspeed = -200;
                 rightspeed += 50;
             }
         }
@@ -209,17 +218,15 @@ public class Main extends PApplet {
                 currentGear = 'N';
 
             } else {
-                //rightspeed = 200;
-                //leftspeed = 170;
-                rightspeed = 220;
+                rightspeed = 250;
                 leftspeed = 200;
                 currentGear = 'D';
             }
         } else if (value == 'S')  // Go backward
         {
             if (rightspeed <= 0 && leftspeed <= 0) {
-                rightspeed = -200;
-                leftspeed = -190;
+                rightspeed = -230;
+                leftspeed = -200;
                 currentGear = 'R';
             } else {
                 rightspeed = 0;
@@ -246,29 +253,32 @@ public class Main extends PApplet {
                 System.out.println("C: " + cVar);
             }
 
-            /*if(headSet.petrol == false)
+
+            if(msg.checkAddrPattern("/muse/elements/experimental/mellow") == true)
             {
-                 if(msg.checkAddrPattern("/muse/elements/experimental/mellow") == true)
-                 {
-                     float mVar = msg.get(0).floatValue();
-                     System.out.println(mVar);
-                     if(mVar == 1)
-                     {
-                         pdir = 1;
-                     }else
-                     {
-                         pdir = 3;
-                     }
 
-                 }
-            }*/
+                System.out.println("Petrol: " + headSet.petrol);
+                float mVar = msg.get(0).floatValue();
+                if(headSet.petrol == false) {
+                    System.out.println("Mellow: " + mVar);
+                    if (mVar == 1) {
+                        pdir = 1;
+                    } else {
+                        pdir = 3;
+                    }
+                }
 
-            if (cVar > 0.3 ) {//&& headSet.petrol == true) {
+            }
+
+
+            if (cVar > 0.3 && headSet.petrol == true ) {
                 myPort.clear();
                 pdir = 0;
                 sdir = 1;
+                headSet.checkPetrol = true;
+
                 if (msg.checkAddrPattern("/muse/acc") == true) {
-                    aVar = msg.get(2).floatValue();
+                    aVar = (float)msg.get(2).floatValue();
 
                     if ((aVar < -100 && (checkA > -150 && checkA < 150) || (aVar < -150 && checkA > 150) || ((aVar > -150 && aVar < 150) && checkA < -150) || (aVar > -150 && aVar < 150) && checkA > 150) || (aVar > 150 && (checkA < 150 && checkA > -150)) || (aVar > 150 && checkA < -150)) {
                         passVar = "3A" + aVar + ",";
@@ -279,14 +289,19 @@ public class Main extends PApplet {
                 }
 
 
-
-            } else if (cVar < 0.3 && checkcVar > 0.3 ){//|| headSet.petrol == false) {
+            } else if ((cVar < 0.3 && checkcVar > 0.3 || (headSet.petrol == false && headSet.checkPetrol == true) ) ){ //
                 sdir = 0;
+                pdir = 3;
                 myPort.write("1L" + 0 + ",");
                 myPort.write("1R" + 0 + ",");
                 checkcVar = cVar;
                 checkA = 500;
                 currentGear = 'N';
+
+                if((headSet.petrol == false && headSet.checkPetrol == true))
+                {
+                    headSet.checkPetrol = false;
+                }
             }
         }
     }

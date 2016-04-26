@@ -13,18 +13,16 @@ public class RemoteControl{
     ControlP5 cp5;
     Slider leftMotorSlider;
     Slider rightMotorSlider;
-    Slider turningSlider;
 
     // Constructor
     RemoteControl(PApplet papplet) {
 
         this.papplet = papplet;
-        this.cp5 = new ControlP5(this.papplet); // Initialize new control p5
+        this.cp5 = new ControlP5(this.papplet); // Iniliatilze new control p5
 
         // Add motorSliders to cp5
         this.leftMotorSlider = cp5.addSlider("LeftMotor");
         this.rightMotorSlider = cp5.addSlider("RightMotor");
-        this.turningSlider = cp5.addSlider("Turning");
 
         // Initialize the sliders
         initialize();
@@ -38,15 +36,13 @@ public class RemoteControl{
         this.leftMotorSlider.setSize(20,100).setRange(0,255).hide();
         this.rightMotorSlider.setPosition(papplet.width-papplet.width/10,papplet.height- (papplet.height/4));
         this.rightMotorSlider.setSize(20,100).setRange(0,255).hide();
-        this.turningSlider.setPosition(150,370);
-        this.turningSlider.setWidth(400).setRange(255,0).setValue(128).setSliderMode(Slider.FLEXIBLE).setLabelVisible(false);
-        this.turningSlider.hide();
     }
 
     public void render(char gear)
     {
 
         papplet.background(0);
+        // Show the motor sliders
         leftMotorSlider.show();
         rightMotorSlider.show();
         papplet.textSize(24);

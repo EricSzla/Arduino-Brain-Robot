@@ -18,6 +18,7 @@ public class HeadSet {
     float x2;
     float y2;
     boolean petrol;
+    boolean checkPetrol;
 
     float speedoX;
     float speedoY;
@@ -40,6 +41,7 @@ public class HeadSet {
         this.x2 =  fuelX + papplet.sin(meterTheta + papplet.PI /2 - papplet.TWO_PI/70) * (radius / 2 - 10);
         this.y2 = fuelY -papplet.cos(meterTheta + papplet.PI/2 - papplet.TWO_PI/70) * (radius / 2 - 10);
         this.petrol = true;
+        this.checkPetrol = false;
 
         this.speedoX = papplet.width/2.2f;
         this.speedoY = papplet.height/1.8f;
@@ -49,8 +51,9 @@ public class HeadSet {
         this.speedoy2 = speedoY -papplet.cos(speedoTheta2 - papplet.PI/2 - papplet.TWO_PI/70) * (radius - 5);
 
         this.steeringWheel[0] = papplet.loadImage("wheel.png");
-        this.steeringWheel[1] = papplet.loadImage("wheel.png");
-        this.steeringWheel[2] = papplet.loadImage("wheel.png");
+        this.steeringWheel[1] = papplet.loadImage("left.png");
+        this.steeringWheel[2] = papplet.loadImage("right.png");
+
         for(int i =0 ;i < steeringWheel.length; i++)
         {
             this.steeringWheel[i].resize(papplet.width*2,papplet.height * 2);
@@ -67,7 +70,6 @@ public class HeadSet {
     }
 
     public void render() {
-        System.out.println("Petrol: " + petrol);
         papplet.background(0);
         papplet.pushMatrix();
         papplet.fill(0);
@@ -177,7 +179,7 @@ public class HeadSet {
     {
         if(dir == 0) {
             if(meterTheta >= 0.05f) {
-                meterTheta -= 0.01f;
+                meterTheta -= 0.005f;
             }else
             {
                 petrol = false;
@@ -190,6 +192,7 @@ public class HeadSet {
                 meterTheta += 0.01f;
             }else
             {
+                checkPetrol = false;
                 petrol = true;
                 papplet.fill(255);
                 papplet.text("Petrol available !", papplet.width/1.2f, papplet.height/1.55f);
@@ -218,4 +221,3 @@ public class HeadSet {
         this.speedoy2 = speedoY -papplet.cos(speedoTheta2 - papplet.PI/2 - papplet.TWO_PI/70) * (radius - 5);
     }
 }
-
