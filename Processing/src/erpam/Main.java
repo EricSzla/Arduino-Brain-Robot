@@ -107,6 +107,7 @@ public class Main extends PApplet {
                 break;
             case 4:
                 kinect.render();
+                kinect.control();
             default:
                 menu();
         }
@@ -155,12 +156,14 @@ public class Main extends PApplet {
         rect(width/2,height/2,200,50);
         rect(width/2,height/2 + 100, 200, 50);
         rect(width/2,height/2 + 200, 200, 50);
+        rect(width/2,height/2 + 300, 200, 50);
 
         fill(0);
         textAlign(CENTER);
         text("Bluetooth Control", width/2,height/2);
         text("AI Robot", width/2, height/2 + 100);
         text("Headset Control", width/2, height/2 + 200);
+        text("Kinect Control", width/2, height/2 + 300);
     }
 
     public void keyPressed() {
