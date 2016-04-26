@@ -1262,6 +1262,96 @@ The next thing we are doing is setting the ``rectMode``, ``frameRate``, loading 
         }
     }
 ```
+<a id="javamenu"> </a>
+###Menu
+Menu method is the place where we are going to draw the menu i.e. buttons. </br>
+***Note: The button's functionality will be implemented in the MouseClicked() method.***</br>
+In the method we are setting background to black colour using ``background(0);``, then hiding the sliders from the BT class. We are hiding those because the BT class has a button to come back to the menu so we do not want to keep the sliders from BT class drawn.</br>
+Once we have the background and the sliders hidden, we are drawing an image on top of the screen using ``image()`` method.</br>
+Then we are drawing the actuall rectangles that will represent buttons using ``rect()`` method that takes four parameters: position x, position y, width, height.</br>
+After we have the buttons we are putting text inside the button using ``text()`` method, it takes 3 parameters, the String (the text you want to put), and the x,y position.</br>
+
+```
+public void menu() {
+        background(0);
+        BT.leftMotorSlider.hide();
+        BT.rightMotorSlider.hide();
+
+        image(erpam, width/2,erpam.height);
+
+        rect(width/2,height/2,200,50);
+        rect(width/2,height/2 + 100, 200, 50);
+        rect(width/2,height/2 + 200, 200, 50);
+
+        fill(0);
+        textAlign(CENTER);
+        text("Bluetooth Control", width/2,height/2);
+        text("AI Robot", width/2, height/2 + 100);
+        text("Headset Control", width/2, height/2 + 200);
+    }
+```
+
+<a id="mouse"> </a>
+###MouseClicked
+This function will be called everytime the user clicks the mouse, in here we want to apply the functionality for the menu buttons and for the button to go back to menu.</br>
+First of all we are ensuring that ``choice == 0`` which means that the user is in the menu, if so we are checking the ``mouseX`` and ``mouseY`` which returns the position of the mouse, we are checking if it falls into the range of the particular buttons if so we change the ``choice`` depending which button the user clicked.</br>
+Then we go to the ``else`` statement which means that user is not in the menu, if user is not in the menu that means there is a button that goes back to menu, so we have to check if user clicks it.</br>
+
+```
+public void mouseClicked() {
+        /* Code used for the buttons in menu and for the button to go back to menu */
+        if(choice == 0) { // Checking if in the menu
+            if (mouseX >= width / 2 - 100 && mouseX <= width / 2 + 100) // Check if mouse is in the middle
+            {
+                if (mouseY >= height / 2 - 25 && mouseY <= height / 2 + 25) // Check if mouse is in the first square
+                {
+                    choice = 1;
+                } else if (mouseY >= height / 2 + 75 && mouseY <= height / 2 + 125) {
+                    choice = 2;
+                } else if (mouseY >= height / 2 + 175 && mouseY <= height / 2 + 225) {
+                    choice = 3;
+                }
+            }
+        }else
+        {
+            // If go back to menu button pressed, change the choice.
+            if(mouseX < width/10 + 100 && mouseX > width/10 - 100)
+            {
+                if(mouseY < height/10 +25 && mouseY > height/10 - 25)
+                {
+                    choice = 0;
+                }
+            }
+        }
+    }
+```
+
+<a id="turning"> </a>
+###Turning 
+This method is used to turn the robot left or right by setting the ``leftSpeed`` and ``rightSpeed`` variables. </br>
+The method takes one parameter which is a ``char``, if we pass ``A`` to the method it will check if we are going <b>forward</b> or <b>backward</b> and set the speed of the right motor to full speed and <b>decrement the left motor speed</b> which will make the robot turn <b>left.</b> </br>
+The same applies when we pass ``D`` but we <b>decrement the right motor</b> which will make the robot turn <b>right.</b></br>
+```
+public void turning(char value) {
+        if (value == 'A') {
+            if (rightspeed >= 0 && leftspeed >= 50) {
+                rightspeed = 250;
+                leftspeed -= 50;
+            } else if (rightspeed < 0 && leftspeed < 0) {
+                rightspeed = -230;
+                leftspeed += 50;
+            }
+        } else if (value == 'D') {
+            if (rightspeed >= 50 && leftspeed >= 0) {
+                leftspeed = 200;
+                rightspeed -= 50;
+            } else if (rightspeed < 0 && leftspeed < 0) {
+                leftspeed = -200;
+                rightspeed += 50;
+            }
+        }
+    }
+```
 
 <a id="javabt"> </a>
 ## RemoteControl.java
