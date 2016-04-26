@@ -1357,7 +1357,7 @@ public void turning(char value) {
 ###Acceleration
 This method is used to accelerate the robot <b>forward</b> or <b>backward</b> when in blueTooth control mode.</br>
 The method takes one parameter ``char value``, if the value is ``'W'`` we are checking if the robot is currently going backward is so then we set the speed to ``0`` in both motors. So basically if the robot is going <b>backward</b> and we press ``W`` then the robot will stop.</br>
-If the value passed is ``S`` then we are checking if the robot is currently going <b>backward</b> if so keep going backward, ``else`` set the motor speed to ``0``. So basically if we are going <b>forward<b> and press ``S`` the robot will stop then if we press ``S`` again the robot will go backward.</br>
+If the value passed is ``S`` then we are checking if the robot is currently going <b>backward</b> if so keep going backward, ``else`` set the motor speed to ``0``. So basically if we are going <b>forward</b> and press ``S`` the robot will stop then if we press ``S`` again the robot will go backward.</br>
 ```
 public void acceleration(char value) {
         if (value == 'W') // Go forward
@@ -1397,6 +1397,7 @@ At the end of that if statement we are using ``myPort.write("1L" + leftspeed + "
 The arduino is expecting a String to arrive and then its checking if the String is starting with ``1L`` if so then it knows we are controlling it by bluetooth and whatever comes after is the speed of the left motor until it reaches ``,`` which tells it to stop reading. Then we pass `1R`` and the speed of right motor, which is taken care of in the arduino code, to set the speed of right motor.</br>
 If the ``choice`` is equal to ``2`` then we send ``2ff` to arduino, when arduino reads it, it calls the ``ai()`` function.</br>
 We also added an emergency stop for the headset, so it can be stopped remotely by pressing any button.</br>
+
 ```
 public void keyPressed() {
         if(choice == 2)
@@ -1438,7 +1439,7 @@ public void keyPressed() {
 So we have all the methods, but where do we call them ? </br>
 That is when ``public void draw()`` comes, it is a loop that executes <b>60 times a second</b> and it is the place where we will display and manipulate the methods.</br>
 In the draw(), we have a ``switch(choice)`` statements, which checks the ``choice`` variable and takes appropriate action depending from the value stored in ``choice``.</br>
-We are checking if the values stored in choice is equal to ``0`` using ``case 0:`` that means that we are gonna execute the <b>menu()<b> method described above.</br>
+We are checking if the values stored in choice is equal to ``0`` using ``case 0:`` that means that we are gonna execute the <b>menu()</b> method described above.</br>
 If the values stored in choice is equal to ``1`` then we are calling a ``render()`` method stored in ``BT`` class. That will take us bluetooth control mode.</br>
 Inside the ``case 2:`` we are just putting text ``Press any key to start..``, and we are drawing a button. We are handling the functionallity for the text in the ``keyPressed()`` function described above.</br>
 The last thing we check is the ``case 3:`` which is an <br>optional step</br> only for peope with the headband hardware.</br>
