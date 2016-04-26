@@ -3,6 +3,7 @@ package erpam;
 import processing.core.*;
 import processing.core.PImage;
 import SimpleOpenNI.*;
+import processing.serial.Serial;
 
 /**
  * Created by Eryk and Pamela on 26/04/2016.
@@ -161,7 +162,7 @@ public class Kinect {
         papplet.text("SHOW YOURSELF ! ", papplet.width / 2, papplet.height / 2);
     }
 
-    public void control()
+    public void control(Serial myPort)
     {
         //if left hand is below the head and right hand is above the head then make the robot go forward
         if(projLHand.y < projHead.y && projRHand.y > projHead.y)
@@ -201,6 +202,9 @@ public class Kinect {
             turning();
             turningFlag = false;
         }
+
+        myPort.write("4L" + leftspeed + ",");
+        myPort.write("4R" + rightspeed + ",");
     }
 
     public void acceleration() {
@@ -245,5 +249,4 @@ public class Kinect {
             }
         }
     }
-
 }

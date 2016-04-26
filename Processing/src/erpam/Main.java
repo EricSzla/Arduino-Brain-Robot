@@ -107,7 +107,7 @@ public class Main extends PApplet {
                 break;
             case 4:
                 kinect.render();
-                kinect.control();
+                kinect.control(myPort);
             default:
                 menu();
         }
