@@ -196,6 +196,11 @@ public class Kinect {
             acceleration();
             accelerationFlag = false;
         }
+        if(turningFlag == true)
+        {
+            turning();
+            turningFlag = false;
+        }
     }
 
     public void acceleration() {
@@ -217,6 +222,26 @@ public class Kinect {
             } else {
                 rightspeed = 0;
                 leftspeed = 0;
+            }
+        }
+    }
+
+    public void turning() {
+        if (value == 'A') {
+            if (rightspeed >= 0 && leftspeed >= 50) {
+                rightspeed = 250;
+                leftspeed -= 50;
+            } else if (rightspeed < 0 && leftspeed < 0) {
+                rightspeed = -230;
+                leftspeed += 50;
+            }
+        } else if (value == 'D') {
+            if (rightspeed >= 50 && leftspeed >= 0) {
+                leftspeed = 200;
+                rightspeed -= 50;
+            } else if (rightspeed < 0 && leftspeed < 0) {
+                leftspeed = -200;
+                rightspeed += 50;
             }
         }
     }
