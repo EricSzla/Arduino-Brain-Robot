@@ -1249,7 +1249,7 @@ The next thing we are doing is setting the ``rectMode``, ``frameRate``, loading 
         smooth();
         
  ```
-<b>And the optional step, if you have the headSet<b> is to initialize the oscp5 connection and the class for the headSet.</br>
+<b>And the optional step, if you have the headSet<b> is to initialize the oscp5 connection and the class for the headSet.</b></br>
  
  ```
         // Headset Connection
@@ -1353,6 +1353,132 @@ public void turning(char value) {
     }
 ```
 
+<a id="acceleration"></a>
+###Acceleration
+This method is used to accelerate the robot <b>forward</b> or <b>backward</b> when in blueTooth control mode.</br>
+The method takes one parameter ``char value``, if the value is ``'W'`` we are checking if the robot is currently going backward is so then we set the speed to ``0`` in both motors. So basically if the robot is going <b>backward</b> and we press ``W`` then the robot will stop.</br>
+If the value passed is ``S`` then we are checking if the robot is currently going <b>backward</b> if so keep going backward, ``else`` set the motor speed to ``0``. So basically if we are going <b>forward<b> and press ``S`` the robot will stop then if we press ``S`` again the robot will go backward.</b>
+```
+public void acceleration(char value) {
+        if (value == 'W') // Go forward
+        {
+            if (rightspeed < 0 || leftspeed < 0) {
+                rightspeed = 0;
+                leftspeed = 0;
+                currentGear = 'N';
+
+            } else {
+                rightspeed = 250;
+                leftspeed = 200;
+                currentGear = 'D';
+            }
+        } else if (value == 'S')  // Go backward
+        {
+            if (rightspeed <= 0 && leftspeed <= 0) {
+                rightspeed = -230;
+                leftspeed = -200;
+                currentGear = 'R';
+            } else {
+                rightspeed = 0;
+                leftspeed = 0;
+                currentGear = 'N';
+            }
+        }
+    }
+```
+<a id="keypressed"></a>
+###keyPressed
+This method as metioned before is used to handle the keyPressed event, we are checking if user is currently in the bluetooth control mode by checking if ``choice`` value is equal to ``1``, if so we are checking which key was pressed using ``keyCode`` this is a variable that stores current key pressed by the user, so we want to control the robot using W - to go forward, S- to go backward,A - to go left, and D - to go right.</br>
+Therefor we are comparing the ``keyCode`` if it equals to `W` then we are calling ``acceleration('W')``, the parameter ``W`` will be taken care of inside acceleration method, it will make the robot go <b>forward.</b></br>
+Simillary if the ``keyCode`` is equal to `S` then we are passing 'S' to ``acceleration('S')`` which will make the robot go <b>backward.</b></br>
+We are comparing the ``keyCode`` to two other characters `A` and `D`, if `A` is passed to ``turning()`` then the robot goes <b>left</b>, if `D` is passed then the robot goes <b>right</b>.</br>
+We are using the ``else`` statement for emergency stopping, so any other button can be pressed to stop the robot.</br>
+At the end of that if statement we are using ``myPort.write("1L" + leftspeed + ",");`` and ``myPort.write("1R" + rightspeed + ",");`` which sends data through ``myPort`` (using bluetooth as its set up in the setup() method). </br>
+The arduino is expecting a String to arrive and then its checking if the String is starting with ``1L`` if so then it knows we are controlling it by bluetooth and whatever comes after is the speed of the left motor until it reaches ``,`` which tells it to stop reading. Then we pass `1R`` and the speed of right motor, which is taken care of in the arduino code, to set the speed of right motor.</br>
+If the ``choice`` is equal to ``2`` then we send ``2ff` to arduino, when arduino reads it, it calls the ``ai()`` function.</br>
+We also added an emergency stop for the headset, so it can be stopped remotely by pressing any button.</br>
+```
+public void keyPressed() {
+        if(choice == 2)
+        {
+            myPort.write("2ff,");
+        }
+        if (choice == 1) {
+            if (keyCode == 'W') {
+                acceleration('W');
+            } else if (keyCode == 'S') {
+                acceleration('S');
+            } else if (keyCode == 'A') {
+                turning('A');
+            } else if (keyCode == 'D') {
+                turning('D');
+
+            } else {
+                leftspeed = 0;
+                rightspeed = 0;
+            }
+
+            myPort.write("1L" + leftspeed + ",");
+            myPort.write("1R" + rightspeed + ",");
+
+            BT.update(rightspeed, leftspeed);
+        }else if(choice == 3)
+        {
+            // Emergency stop for headSet
+            myPort.write("1L" + 0 + ",");
+            myPort.write("1R" + 0 + ",");
+        }
+
+
+    }
+```
+
+<a id="draw"></a>
+###Draw
+So we have all the methods, but where do we call them ? </br>
+That is when ``public void draw()`` comes, it is a loop that executes <b>60 times a second</b> and it is the place where we will display and manipulate the methods.</br>
+In the draw(), we have a ``switch(choice)`` statements, which checks the ``choice`` variable and takes appropriate action depending from the value stored in ``choice``.</br>
+We are checking if the values stored in choice is equal to ``0`` using ``case 0:`` that means that we are gonna execute the <b>menu()<b> method described above.</br>
+If the values stored in choice is equal to ``1`` then we are calling a ``render()`` method stored in ``BT`` class. That will take us bluetooth control mode.</br>
+Inside the ``case 2:`` we are just putting text ``Press any key to start..``, and we are drawing a button. We are handling the functionallity for the text in the ``keyPressed()`` function described above.</br>
+The last thing we check is the ``case 3:`` which is an <br>optional step</br> only for peope with the headband hardware.</br>
+In here we are updating the methods for the headSet class which are described in headSet class and drawing go back to menu button.</br>
+The ``default`` is used for error checking, if ``choice`` variable is equal to different value than 0,1,2 or 3 then we call the menu();</br>
+***Please note: there is a ``break;`` command at the end of each ``case`` which is necessery, without it all three cases would be executed and this would introduce chaos in the program.***
+```
+public void draw() {
+        switch (choice) {
+            case 0:
+                textSize(12);
+                menu();
+                break;
+            case 1:
+                BT.render(currentGear);
+                break;
+            case 2:
+                background(0);
+                fill(255);
+                text("Press any key to start..", width/2,height/2);
+                rect(width/10,height/10,200,50);
+                fill(0);
+                text("Menu",width/10,height/10 + 10);
+
+                break;
+            case 3:
+                headSet.updateSpeedo(sdir);
+                headSet.render();
+                headSet.updatePetrol(pdir);
+
+                fill(255);
+                rect(width/10,height/10,200,50);
+                fill(0);
+                text("Menu",width/10,height/10 + 10);
+                break;
+            default:
+                menu();
+        }
+    }
+```
 <a id="javabt"> </a>
 ## RemoteControl.java
 
