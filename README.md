@@ -1249,7 +1249,7 @@ The next thing we are doing is setting the ``rectMode``, ``frameRate``, loading 
         smooth();
         
  ```
-<b>And the optional step, if you have the headSet<b> is to initialize the oscp5 connection and the class for the headSet.</b></br>
+<b>And the optional step, if you have the headSet<b> is to initialize the oscp5 connection and the class for the headSet.</b> </br>
  
  ```
         // Headset Connection
@@ -1357,7 +1357,7 @@ public void turning(char value) {
 ###Acceleration
 This method is used to accelerate the robot <b>forward</b> or <b>backward</b> when in blueTooth control mode.</br>
 The method takes one parameter ``char value``, if the value is ``'W'`` we are checking if the robot is currently going backward is so then we set the speed to ``0`` in both motors. So basically if the robot is going <b>backward</b> and we press ``W`` then the robot will stop.</br>
-If the value passed is ``S`` then we are checking if the robot is currently going <b>backward</b> if so keep going backward, ``else`` set the motor speed to ``0``. So basically if we are going <b>forward<b> and press ``S`` the robot will stop then if we press ``S`` again the robot will go backward.</b>
+If the value passed is ``S`` then we are checking if the robot is currently going <b>backward</b> if so keep going backward, ``else`` set the motor speed to ``0``. So basically if we are going <b>forward<b> and press ``S`` the robot will stop then if we press ``S`` again the robot will go backward.</br>
 ```
 public void acceleration(char value) {
         if (value == 'W') // Go forward
