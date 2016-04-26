@@ -13,6 +13,7 @@ public class Kinect {
     PImage img;
     PVector projCoM, projHead, projLHand, projRHand, projLKnee, projRKnee;
     char value;
+    boolean accelerationFlag, turningFlag;
 
     Kinect(PApplet papplet){
         //set size of the application window
@@ -35,6 +36,9 @@ public class Kinect {
         img=papplet.createImage(papplet.displayWidth,papplet.displayHeight,papplet.RGB);
         img.loadPixels();
         projCoM = new PVector();
+
+        accelerationFlag = false;
+        turningFlag = false;
     }
 
     public void render(){
@@ -152,5 +156,33 @@ public class Kinect {
     //is called everytime a user disappears
     public void onLostUser(SimpleOpenNI curContext, int userId) {
         papplet.text("SHOW YOURSELF ! ", papplet.width / 2, papplet.height / 2);
+    }
+
+    public void control()
+    {
+        //if left hand is below the head and right hand is above the head then make the robot go forward
+        if(projLHand.y < projHead.y && projRHand.y > projHead.y)
+        {
+            accelerationFlag = true;
+        }
+
+        //if left hand is above the head and right hand is below the head then make the robot go forward
+        else if(projLHand.y > projHead.y && projRHand.y < projHead.y)
+        {
+            accelerationFlag = true;
+        }
+
+        //if left knee is above the hips then turn left
+        if(projLKnee.y < projCoM.y)
+        {
+            turningFlag = true;
+        }
+
+        //if right knee is above the hips then turn left
+        else if(projRKnee.y > projCoM.y)
+        {
+            turningFlag = true;
+        }
+
     }
 }
