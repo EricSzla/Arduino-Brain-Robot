@@ -1249,7 +1249,7 @@ The next thing we are doing is setting the ``rectMode``, ``frameRate``, loading 
         smooth();
         
  ```
-<b>And the optional step, if you have the headSet<b> is to initialize the oscp5 connection and the class for the headSet.</b> </br>
+<b>And the optional step, if you have the headSet is to initialize the oscp5 connection and the class for the headSet.</b> </br>
  
  ```
         // Headset Connection
