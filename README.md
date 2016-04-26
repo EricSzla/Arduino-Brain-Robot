@@ -1480,6 +1480,87 @@ public void draw() {
         }
     }
 ```
+###oscEvent
+This method is for automatic event detection. oscP5 locates functions inside your sketch and will link incoming OSC message to matching functions automatically. Incoming OSC messages can easily be captured within your sketch by implementing the oscEvent function.
+Because of the functionality of this, we are going to use this to control our robot using the muse headset.
+
+First of all we have to know how we want to control the robot using the headset. In this case we are going to use two brain waves: <b>Concentration and Meditation</b>. The muse headset is able to read your concentration and meditation level (0 being the lowest and 1 as the highest).
+We are going to use concentration for making the robot go forward and we are going to use meditation for filling up the petrol tank. </b>Just like any other vehicle, it needs petrol in order to run. Without any petrol, the robot won't go forward.
+We are also going to use the headset's <b>accelerometer</b> which detects the tilt/motion of the device. When the headset is tilted to the left it returns a negative value, otherwise it returns a positive value. We are going to use this for turning the robot left or right.
+
+When you wear the headset, all the different elements such as brainwaves are being recorded in different paths. In order to get that data, we are writing an if statement to check if the headset is getting data first.
+>  if (msg.checkAddrPattern("path") == true)
+
+We then store the data in a variable
+> var = msg.get(0).floatValue();
+
+We are going to store the <b>concentration</b> in ``cVar``, <b>meditation</b> in ``mVar`` and <b>accelerometer data</b> in ``aVar``.
+
+First we are checking if there is petrol. If there is <b>none</b>, then we have to meditate. If the meditation level reaches 1 then the robot will gain petrol. This is done by passing ``1`` to ``updatePetrol()`` method in Headset class. If there's petrol, then we can start concentrating to make the robot go forward.
+
+When we reach the concentration level of <b>0.3</b> then the robot can go forward and we can now start getting data from the accelerometer to turn the robot left and right. If ``aVar < -150`` then turn left, else if ``aVar > 150`` then turn right. If it is in between -150 and 150 then just go straight.
+
+To make sure that we are only writing in the Serial once, we are going to use ``checkA`` and ``checkcVar`` which are the variables where we store the last aVar and cVar. Therefore we can only write when the new aVar and cVar have different values with checkA and checkcVar.
+```
+ public void oscEvent(OscMessage msg) {
+        if (choice == 3) {
+            if (msg.checkAddrPattern("/muse/elements/experimental/concentration") == true) {
+                cVar = msg.get(0).floatValue();
+                System.out.println("C: " + cVar);
+            }
+
+            if(headSet.petrol == false) {
+                if (msg.checkAddrPattern("/muse/elements/experimental/mellow") == true) {
+
+                    System.out.println("Petrol: " + headSet.petrol);
+                    float mVar = msg.get(0).floatValue();
+                    // if (headSet.petrol == false) {
+                    System.out.println("Mellow: " + mVar);
+                    if (mVar == 1) {
+                        pdir = 1;
+                    } else {
+                        pdir = 3;
+                    }
+                }
+            }
+
+            if (cVar > 0.3 && headSet.petrol == true ) {
+                myPort.clear();
+                pdir = 0;
+                sdir = 1;
+                headSet.checkPetrol = true;
+
+                if (msg.checkAddrPattern("/muse/acc") == true) {
+                    aVar = msg.get(2).floatValue();
+
+                    if ((aVar < -100 && (checkA > -150 && checkA < 150) || (aVar < -150 && checkA > 150) || ((aVar > -150 && aVar < 150) && checkA < -150) || (aVar > -150 && aVar < 150) && checkA > 150) || (aVar > 150 && (checkA < 150 && checkA > -150)) || (aVar > 150 && checkA < -150)) {
+                        passVar = "3A" + aVar + ",";
+                        headSet.pass(myPort, passVar);
+                        checkA = aVar;
+                        checkcVar = cVar;
+                        headSet.updateWheel(aVar);
+                    }
+                }
+
+
+            } else if ((cVar < 0.3 && checkcVar > 0.3 || (headSet.petrol == false && headSet.checkPetrol == true) ) ){ //
+                sdir = 0;
+                pdir = 3;
+                myPort.write("1L" + 0 + ",");
+                myPort.write("1R" + 0 + ",");
+                checkcVar = cVar;
+                checkA = 500;
+                currentGear = 'N';
+
+                if((headSet.petrol == false && headSet.checkPetrol == true))
+                {
+                    headSet.checkPetrol = false;
+                }
+            }
+        }
+    }
+```
+
 
 <a id="javabt"> </a>
 ## RemoteControl.java
