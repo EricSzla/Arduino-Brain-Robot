@@ -14,6 +14,7 @@ public class Kinect {
     PVector projCoM, projHead, projLHand, projRHand, projLKnee, projRKnee;
     char value;
     boolean accelerationFlag, turningFlag;
+    int leftspeed, rightspeed;
 
     Kinect(PApplet papplet){
         //set size of the application window
@@ -39,6 +40,8 @@ public class Kinect {
 
         accelerationFlag = false;
         turningFlag = false;
+        leftspeed = 0;
+        rightspeed = 0;
     }
 
     public void render(){
@@ -164,25 +167,58 @@ public class Kinect {
         if(projLHand.y < projHead.y && projRHand.y > projHead.y)
         {
             accelerationFlag = true;
+            value = 'W';
         }
 
-        //if left hand is above the head and right hand is below the head then make the robot go forward
+        //if left hand is above the head and right hand is below the head then make the robot go backward
         else if(projLHand.y > projHead.y && projRHand.y < projHead.y)
         {
             accelerationFlag = true;
+            value = 'S';
         }
 
         //if left knee is above the hips then turn left
         if(projLKnee.y < projCoM.y)
         {
             turningFlag = true;
+            value = 'A';
         }
 
         //if right knee is above the hips then turn left
         else if(projRKnee.y > projCoM.y)
         {
             turningFlag = true;
+            value = 'D';
         }
 
+        if(accelerationFlag == true)
+        {
+            acceleration();
+            accelerationFlag = false;
+        }
     }
+
+    public void acceleration() {
+        if (value == 'W') // Go forward
+        {
+            if (rightspeed < 0 || leftspeed < 0) {
+                rightspeed = 0;
+                leftspeed = 0;
+
+            } else {
+                rightspeed = 250;
+                leftspeed = 200;
+            }
+        } else if (value == 'S')  // Go backward
+        {
+            if (rightspeed <= 0 && leftspeed <= 0) {
+                rightspeed = -230;
+                leftspeed = -200;
+            } else {
+                rightspeed = 0;
+                leftspeed = 0;
+            }
+        }
+    }
+
 }
