@@ -1480,6 +1480,8 @@ public void draw() {
         }
     }
 ```
+
+<a id = oscevent></a>
 ###oscEvent
 This method is for automatic event detection. oscP5 locates functions inside your sketch and will link incoming OSC message to matching functions automatically. Incoming OSC messages can easily be captured within your sketch by implementing the oscEvent function.
 Because of the functionality of this, we are going to use this to control our robot using the muse headset.
@@ -1563,7 +1565,59 @@ To make sure that we are only writing in the Serial once, we are going to use ``
 
 
 <a id="javabt"> </a>
+
 ## RemoteControl.java
+- RemoteControl class is the class where we are going to draw the sliders to visually show the speed of the left and right motors and to show what gear the robot is in (<b>D</b> - Drive, <b>N</b> - Neutral, <b>R</b> - Reverse)
+- The methods we are going to use in RemoteControl are as follow:
+  *  <a href="#initialize">Initialize</a> - Used to set the sliders position, size, range and hides it
+  *  <a href="#render">Render</a> - Used to draw everything
+  *  <a href="#update">Update</a> - Makes necessary changes in the render method when an event occurs.
+
+<a id = "initialize"></a>
+###initialize()
+Here we are setting how and where we want the sliders to be displayed. We want to hide it at the start and only display it when we have chosen the remote control feature from the main menu.
+```
+ this.leftMotorSlider.setPosition(papplet.width/10-20,papplet.height- (papplet.height/4));
+ this.leftMotorSlider.setSize(20,100).setRange(0,255).hide();
+ this.rightMotorSlider.setPosition(papplet.width-papplet.width/10,papplet.height- (papplet.height/4));
+ this.rightMotorSlider.setSize(20,100).setRange(0,255).hide();
+```
+
+<a id = "render"></a>
+###render()
+This method takes one parameter ``gear`` which is a character variable. This method is called from the main class in ``case 1:`` in the switch statement which is in the ``draw()``. It draws 2 sliders for left and right motors and show the current gear in text at the middle of the screen.
+```
+    public void render(char gear)
+    {
+
+        papplet.background(0);
+        // Show the motor sliders
+        leftMotorSlider.show();
+        rightMotorSlider.show();
+        papplet.textSize(24);
+        papplet.textAlign(papplet.CENTER);
+        papplet.fill(255);
+        papplet.text("Gear: " + gear, papplet.width/2,papplet.height/2);
+        papplet.rect(papplet.width/10,papplet.height/10,200,50);
+        papplet.fill(0);
+        papplet.text("Menu",papplet.width/10,papplet.height/10 + 10);
+    }
+````
+
+<a id = "update"></a>
+###update()
+This method takes 2 parameters: ``speed`` and ``leftspeed`` which are both float variables. This is what we are going to use for setting the values of the sliders (speed for right motor and leftspeed for left motor)
+
+```
+    public void update(float speed, float leftspeed)
+    {
+        // Update controls
+        rightMotorSlider.setValue(papplet.map(speed,0,200,0,255));
+        leftMotorSlider.setValue(papplet.map(leftspeed,0,170,0,255));
+
+    }
+```
+
 
 <a id="javahs"> </a>
 ## HeadSet.java
