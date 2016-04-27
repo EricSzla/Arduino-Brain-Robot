@@ -1573,6 +1573,32 @@ To make sure that we are only writing in the Serial once, we are going to use ``
   *  <a href="#render">Render</a> - Used to draw everything
   *  <a href="#update">Update</a> - Makes necessary changes in the render method when an event occurs.
 
+###Fields
+These are the fields that we are using in the class
+```
+    PApplet papplet;
+    ControlP5 cp5;
+    Slider leftMotorSlider;
+    Slider rightMotorSlider;
+```
+
+##Constructor
+This is where we initialize controlP5 and the sliders. Also we are calling ``initialize()`` method here because we only want to call this method once at the start.
+```
+    RemoteControl(PApplet papplet) {
+
+        this.papplet = papplet;
+        this.cp5 = new ControlP5(this.papplet); // Iniliatilze new control p5
+
+        // Add motorSliders to cp5
+        this.leftMotorSlider = cp5.addSlider("LeftMotor");
+        this.rightMotorSlider = cp5.addSlider("RightMotor");
+
+        // Initialize the sliders
+        initialize();
+    }
+````
+
 <a id = "initialize"></a>
 ###initialize()
 Here we are setting how and where we want the sliders to be displayed. We want to hide it at the start and only display it when we have chosen the remote control feature from the main menu.
@@ -1620,4 +1646,182 @@ This method takes 2 parameters: ``speed`` and ``leftspeed`` which are both float
 
 
 <a id="javahs"> </a>
+
 ## HeadSet.java
+- HeadSet class is the class where we are going to draw steering wheels, fuel tank meter and speedometer. This is also where we are setting the <b>petrol</b> to true or false which is necessary to run the robot.
+- The methods we are going to use in main are as follow:
+  *  <a href="#pass">Pass</a> - Used to pass data to arduino
+  *  <a href="#renderh">Render</a> - Used to draw everything
+  *  <a href="#updatewheel">updateWheel</a> - Used to rotating the wheel to the left and right
+  *  <a href="#updatepetrol">updatePetrol</a> - Used to change the amount of petrol in the fuel tank meter
+  *  <a href="#updatespeedo">updateSpeedo</a> - Used to show the speed of the robot when running
+
+###Fields
+These are the fields that we are going to use in this class.
+```
+    PApplet papplet;
+    float radius;
+    float fuelX;
+    float fuelY;
+    float theta;
+    float meterTheta;
+    float fuelLines;
+    float x2;
+    float y2;
+    boolean petrol;
+    boolean checkPetrol;
+
+    float speedoX;
+    float speedoY;
+    float speedoTheta;
+    float speedoTheta2;
+    float speedox2;
+    float speedoy2;
+    PImage[] steeringWheel = new PImage[3];
+    int rw;
+```
+
+###Constructor
+This is where we are initializing the variables that we declared above.
+```
+    HeadSet(PApplet papplet) {
+
+        this.papplet = papplet;
+        this.radius = papplet.width/5;
+        this.fuelX = papplet.width/1.15f;
+        this.fuelY = papplet.height/1.4f;
+        this.theta = 0;
+        this.meterTheta = papplet.PI - 1;
+        this.fuelLines = 16;
+        this.x2 =  fuelX + papplet.sin(meterTheta + papplet.PI /2 - papplet.TWO_PI/70) * (radius / 2 - 10);
+        this.y2 = fuelY -papplet.cos(meterTheta + papplet.PI/2 - papplet.TWO_PI/70) * (radius / 2 - 10);
+        this.petrol = true;
+        this.checkPetrol = false;
+
+        this.speedoX = papplet.width/2.2f;
+        this.speedoY = papplet.height/1.8f;
+        this.speedoTheta = 0;
+        this.speedoTheta2 = papplet.PI;
+        this.speedox2 =  speedoX + papplet.sin(speedoTheta2 + papplet.PI /2 - papplet.TWO_PI/70) * (radius - 5);
+        this.speedoy2 = speedoY -papplet.cos(speedoTheta2 - papplet.PI/2 - papplet.TWO_PI/70) * (radius - 5);
+
+        this.steeringWheel[0] = papplet.loadImage("wheel.png");
+        this.steeringWheel[1] = papplet.loadImage("left.png");
+        this.steeringWheel[2] = papplet.loadImage("right.png");
+
+        for(int i =0 ;i < steeringWheel.length; i++)
+        {
+            this.steeringWheel[i].resize(papplet.width*2,papplet.height * 2);
+        }
+
+        this.rw = 0;
+
+        papplet.imageMode(papplet.CENTER);
+    }
+```
+
+<a id="pass"></a>
+###pass
+This method is called in the ``oscEvent()`` in the main. It takes two parameters: ``myPort`` which is the serial that we are using in order to communicate to arduino by bluetooth and ``var`` which is the ``passVar`` in the oscEvent() method.
+```
+public void pass(Serial myPort,String var)
+    {
+        myPort.write(var);
+    }
+```
+
+<a id = "renderh"></a>
+###render()
+This method is responsible for drawing the steering wheel, the fuel tank meter and the speedometer.
+```
+public void render() {
+        papplet.background(0);
+        papplet.pushMatrix();
+        papplet.fill(0);
+        papplet.noStroke();
+        papplet.text("Petrol", fuelX,fuelY + 30 );
+        papplet.ellipse(fuelX, fuelY, radius, radius);
+
+        for (int i = 0; i < fuelLines; i++) {
+
+            if(theta > papplet.PI/2 + 0.5 && theta <= papplet.PI + 0.01)
+            {
+                papplet.stroke(0,255, 0);
+
+            }else if(theta > papplet.PI/2 - 0.5 && theta < papplet.PI - 0.01)
+            {
+                papplet.stroke(255,255,0);
+            }else
+            {
+                papplet.stroke(255,0,0);
+            }
+            float lineX = fuelX + papplet.sin(theta - papplet.PI /2) * (radius / 2 - 5);
+            float lineY = fuelY - papplet.cos(theta - papplet.PI/2) * (radius /  2 - 5);
+
+            papplet.line(lineX, lineY, fuelX, fuelY);
+
+            theta += papplet.TWO_PI / fuelLines;
+            if (theta > papplet.PI) {
+                theta = 0;
+            }
+        }
+        papplet.fill(0);
+        papplet.stroke(0);
+        papplet.ellipse(fuelX,fuelY,radius/1.5f,radius/1.5f);
+        papplet.stroke(255);
+        papplet.strokeWeight(3);
+        papplet.ellipse(fuelX,fuelY,5,5);
+        papplet.line(fuelX,fuelY,x2,y2);
+        papplet.strokeWeight(2);
+        papplet.popMatrix();
+
+
+        papplet.pushMatrix();
+
+        //papplet.ellipse(speedoX, speedoY, radius*3f, radius*3f);
+
+        float thetaInc = papplet.TWO_PI/fuelLines;
+        float r;
+        for (int i = 1; i < fuelLines; i++) {
+
+
+            speedoTheta = i * thetaInc;
+
+            if (speedoTheta > papplet.PI) {
+                speedoTheta = 0;
+            }
+
+            if(i%2 == 0) {
+                r = radius/1.5f;
+            }
+            else
+            {
+                r = radius /1.05f;
+            }
+
+            float lineX1 = speedoX + papplet.sin(speedoTheta - papplet.PI /2) * (radius * 1.3f - 5);
+            float lineY1 = speedoY - papplet.cos(speedoTheta - papplet.PI/2) * (radius * 1.3f - 5);
+
+            float lineX2 = speedoX + papplet.sin(speedoTheta - papplet.PI /2) * (r);
+            float lineY2 = speedoY - papplet.cos(speedoTheta - papplet.PI/2) * (r);
+
+            papplet.stroke(255);
+            papplet.line(lineX1, lineY1, lineX2, lineY2);
+            //papplet.line(speedoX, speedoY, lineX, lineY);
+
+        }
+        papplet.fill(0);
+        papplet.stroke(0);
+        papplet.stroke(255,0,0);
+        papplet.strokeWeight(5);
+        papplet.ellipse(speedoX,speedoY,10,10);
+        papplet.line(speedoX,speedoY,speedox2,speedoy2);
+        papplet.strokeWeight(2);
+        papplet.popMatrix();
+
+        papplet.pushMatrix();
+        papplet.image(steeringWheel[rw],papplet.width/2+20,papplet.height-100);
+        papplet.popMatrix();
+
+    }
+```
