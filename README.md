@@ -1,5 +1,3 @@
-![title](https://cloud.githubusercontent.com/assets/15609881/12981660/82bf5158-d0d9-11e5-8ef1-ccd10aa02157.png)
-
 ### Members:
 **Name:** Pamela Sabio</br>
 **Student number:** C14484542 DT282/2</br>
