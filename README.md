@@ -1572,7 +1572,7 @@ To make sure that we are only writing in the Serial once, we are going to use ``
   *  <a href="#update">Update</a> - Makes necessary changes in the render method when an event occurs.
 
 ###Fields
-These are the fields that we are using in the class
+These are the fields that we are using in the class.
 ```
     PApplet papplet;
     ControlP5 cp5;
