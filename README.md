@@ -499,14 +499,14 @@ class AiClass
 
 <a id = "erpamain"> </a>
 
-##erpam.ino
+## erpam.ino
 
 - This class is the main class and this is where we are going to declare and initialize global variables, call and manipulate
   the classes named above.
 
   This is also where we are opening the serial port in order to connect via Bluetooth.
 
-###Including header files
+### Including header files
 These are the libraries that we need to include:
 - stdlib.h which is the header of the general purpose library which includes functions involving memory allocation, process control, conversions and others.
 - SoftwareSerial.h to allow serial communication on other digital pins of the Arduino which in our case is the Bluetooth sensor.
@@ -523,7 +523,7 @@ In C++ we need to include the header files in the main when creating different c
 #include "NewPingSensor.h"
 ```
 
-###Constant variables
+### Constant variables
 These are the constant variables that we are defining:
 
 ```
@@ -545,7 +545,7 @@ The first three variables are used for the AI function.
 
 The following variables are used for initializing the three ultrasonic sensors that we are using. The values represent the pins that we are using in the arduino for each sensor.
 
-###namespace, classes and library
+### namespace, classes and library
 Here we are using namespace, initializing the instance of the classes and the SoftwareSerial library.
 ```
 using namespace ErpamBot;
@@ -576,7 +576,7 @@ When initializing the distance sensor we are passing three parameters: Echo Pin,
 The Arduino hardware has built-in support for serial communication on pins 0 and 1 hence why we are using these values when initializing the SoftwareSerial library.
 > SoftwareSerial BTserial(0, 1);
 
-###Global variables
+### Global variables
 These are all the global variable that we are using in the program. We are setting these variables as global because we want all the functions to be able to access these variables.
 ```
 String BluetoothData; // Stores data sent via bluetooth
@@ -596,7 +596,7 @@ int obstacleRight = 0;
 int obstacleLeft = 0;
 ```
 
-###setup()
+### setup()
 We put code here in the setup because we want the code to run once at the start.
 
 Here we are configuring the specified pins to behave either as an input or an output. We are using pinMode which takes two parameters:
@@ -648,7 +648,7 @@ digitalWrite(9, HIGH);
 digitalWrite(8, HIGH);
 ```
 
-###loop()
+### loop()
 After creating a setup() function, which initializes and sets the initial values, the loop() function does precisely what its name suggests, and loops consecutively, allowing your program to change and respond. Use it to actively control the Arduino board.
 ```
 void loop() {
@@ -669,7 +669,7 @@ void loop() {
 Here we are going to use a switch statement for calling different functions based on the variable <b>choice</b> which is depending on the data received via bluetooth through BTserial which I will be talking about in the next section.
 
 
-###serialEvent()
+### serialEvent()
 This function is called <i>automatically</i> when data is available. This means that this function does not have to be called in main.
 
 ```
@@ -732,7 +732,7 @@ If BluetoothData starts with 3, then it means that we want to control the robot 
     }
 ```
 
-###bluetoothcontrol()
+### bluetoothcontrol()
 This function allows the robot to be controlled using W, A, S, D keys from the keyboard.
 
 ```
@@ -787,7 +787,7 @@ If sSpeed < 0 then that means that we want the motor to go backward hence why we
 
 As stated in the setup() section, we are going to set pin ``8`` or ``9`` to ``LOW`` if we want the motors to move.
 
-###headSetfxn
+### headSetfxn
 This function just calls the go_forward() function from the HeadSet Class.
 We are converting the accelerometer data that we stored in <b>acc</b> and we are passing it to go_forward() function in HeadSet Class. We are going to manipulate all the data that we are receiving in the HeadSet class therefore not much codes are needed here.
 ```
@@ -798,7 +798,7 @@ void headSetfxn()
 }
 ```
 
-###aifxn()
+### aifxn()
 This function is the function for Artificial Intelligence feature. We are going to make the robot move according to the data that the HC-05 distance sensors are receiving.
 ```
 void aifxn()
@@ -924,7 +924,7 @@ We are then calling the function recursively as we want the function to run all 
   aifxn();
 ```
 
-###checkObstacles
+### checkObstacles
 This function is used in the aifxn() and is responsible for the necessary actions of the robot based on the scanned data from the HC-05 distance sensors. <b><i>Note that this function is only called when the robot has detected an obstacle in front. We want to check the left and right sensors in order for the robot to decide which direction its taking next.</b></i>
 ```
 void checkObstacles()
@@ -994,6 +994,7 @@ If there is an obstacle <b>only</b> in the <b> right</b> then we are going to ma
   }
 ```
 If <b>neither</b> of the left sensor and right sensor has detected any obstacles, then we are making the robot turn left or right <b>randomly</b> as we want the robot to make its own decisions.
+
 ```
   else if (medianLeft > TOO_CLOSE && medianRight > TOO_CLOSE)
   {
@@ -1015,7 +1016,7 @@ If <b>neither</b> of the left sensor and right sensor has detected any obstacles
 ## HeadSet.h
 - This class is for manipulating the robot based on the data that we are receiving from the accelerometer of the headset. How the accelerometer works is it is giving values based on how you are tilting your head (if you tilt your head to the left it will return negative values, and if you tilt your head to the right it will return positive values).<b><i> The more you tilt your head, the bigger the value its gonna return for positive values, and the smaller the values for negative values.</b></i>
 
-###go_forward()
+### go_forward()
 This is the only method in this class. And in this class we are only changing the direction of the robot based on the accelerometer values the we are receiving. This value is passed as a parameter and we are calling it <b>acc</b>.
 > void go_forward(float acc)
 
@@ -1035,7 +1036,9 @@ If acc is less than -150, then we want the robot to turn left so we are setting 
           analogWrite(3, 50); // LEFT
         }
 ```
+
 If acc is more than 150, then we want the robot to turn right so we are setting pin ``11`` to ``50`` and pin ``3`` to ``200``. The difference in values in the pins when turning left and right is due to the difference in motor power.
+
 ```
         else if (acc > 150)
         {
@@ -1062,8 +1065,9 @@ If acc is more the -150 and less than 150 then that means that our head is in ne
         }
 ```
 
-###Full code for class
+### Full code for class
 So by now, our code must look like this:
+
 ```
 // Class for AI
 namespace ErpamBot
@@ -1151,7 +1155,7 @@ class HeadSet
   import oscP5.*;
   ```
   
-  ###Global Variables
+  ### Global Variables
   Next we are declaring the <b>global variables</b>, which means we can access those variables from every method in the package.
   
   The variable ``myPort`` of a type ``Serial`` which is a method imported from the ``processing.serial.*`` library, allow us to set up the bluetooth connection with the robot.</br>
@@ -1165,7 +1169,7 @@ class HeadSet
   Next, we are declaring variables for the menu, ``PImage`` is a type of variable that allow us to store the image for the menu.
   ``choice`` will be used to record which functionality the user chooses to use i.e. bluetooth control, headset control etc.
   
-  ```
+ ```
     PImage erpam;  // Menu image
     int choice = 0;         // User choice (menu)
  ```
@@ -1210,7 +1214,7 @@ class HeadSet
     
     
 <a id ="settings"> </a>
-###Settings
+### Settings
 We are going to use that method only for one purpose to set the screen size of our application. We can do it using a method from processing.core library called size() which takes two parameters width and height. The methods passes as paremeters return the width size and height size of the screen we are using, therefor the size will be set to fullscreen </br>
 
 ```
@@ -1220,7 +1224,7 @@ public void settings() {
 ```
 
 <a id="setup"></a>
-###Setup
+### Setup
 Setup is the place where we are initializing the ports,classes and variables. This is the code that will run <b>only once</b> at the start of the program.</br>
 
 The first thing we want to do is initialize the blueetooth port to communicate with the Arduino, in order to do that we use the variable alreade declared before ``myPort`` and set it to ``new Serial(this, portName, 9600)`` the parameters that we are passing are ``this`` or the PApplet that the main class extends, ``portName`` which is set to ``Serial.list()[2];`` and ``9600`` which is the baud rate.</br>
@@ -1261,7 +1265,7 @@ The next thing we are doing is setting the ``rectMode``, ``frameRate``, loading 
     }
 ```
 <a id="javamenu"> </a>
-###Menu
+### Menu
 Menu method is the place where we are going to draw the menu i.e. buttons. </br>
 ***Note: The button's functionality will be implemented in the MouseClicked() method.***</br>
 In the method we are setting background to black colour using ``background(0);``, then hiding the sliders from the BT class. We are hiding those because the BT class has a button to come back to the menu so we do not want to keep the sliders from BT class drawn.</br>
@@ -1290,7 +1294,7 @@ public void menu() {
 ```
 
 <a id="mouse"> </a>
-###MouseClicked
+### MouseClicked
 This function will be called everytime the user clicks the mouse, in here we want to apply the functionality for the menu buttons and for the button to go back to menu.</br>
 First of all we are ensuring that ``choice == 0`` which means that the user is in the menu, if so we are checking the ``mouseX`` and ``mouseY`` which returns the position of the mouse, we are checking if it falls into the range of the particular buttons if so we change the ``choice`` depending which button the user clicked.</br>
 Then we go to the ``else`` statement which means that user is not in the menu, if user is not in the menu that means there is a button that goes back to menu, so we have to check if user clicks it.</br>
@@ -1325,7 +1329,7 @@ public void mouseClicked() {
 ```
 
 <a id="turning"> </a>
-###Turning 
+### Turning 
 This method is used to turn the robot left or right by setting the ``leftSpeed`` and ``rightSpeed`` variables. </br>
 The method takes one parameter which is a ``char``, if we pass ``A`` to the method it will check if we are going <b>forward</b> or <b>backward</b> and set the speed of the right motor to full speed and <b>decrement the left motor speed</b> which will make the robot turn <b>left.</b> </br>
 The same applies when we pass ``D`` but we <b>decrement the right motor</b> which will make the robot turn <b>right.</b></br>
@@ -1352,7 +1356,7 @@ public void turning(char value) {
 ```
 
 <a id="acceleration"></a>
-###Acceleration
+### Acceleration
 This method is used to accelerate the robot <b>forward</b> or <b>backward</b> when in blueTooth control mode.</br>
 The method takes one parameter ``char value``, if the value is ``'W'`` we are checking if the robot is currently going backward is so then we set the speed to ``0`` in both motors. So basically if the robot is going <b>backward</b> and we press ``W`` then the robot will stop.</br>
 If the value passed is ``S`` then we are checking if the robot is currently going <b>backward</b> if so keep going backward, ``else`` set the motor speed to ``0``. So basically if we are going <b>forward</b> and press ``S`` the robot will stop then if we press ``S`` again the robot will go backward.</br>
@@ -1385,7 +1389,7 @@ public void acceleration(char value) {
     }
 ```
 <a id="keypressed"></a>
-###keyPressed
+### keyPressed
 This method as metioned before is used to handle the keyPressed event, we are checking if user is currently in the bluetooth control mode by checking if ``choice`` value is equal to ``1``, if so we are checking which key was pressed using ``keyCode`` this is a variable that stores current key pressed by the user, so we want to control the robot using W - to go forward, S- to go backward,A - to go left, and D - to go right.</br>
 Therefor we are comparing the ``keyCode`` if it equals to `W` then we are calling ``acceleration('W')``, the parameter ``W`` will be taken care of inside acceleration method, it will make the robot go <b>forward.</b></br>
 Simillary if the ``keyCode`` is equal to `S` then we are passing 'S' to ``acceleration('S')`` which will make the robot go <b>backward.</b></br>
@@ -1433,7 +1437,7 @@ public void keyPressed() {
 ```
 
 <a id="draw"></a>
-###Draw
+### Draw
 So we have all the methods, but where do we call them ? </br>
 That is when ``public void draw()`` comes, it is a loop that executes <b>60 times a second</b> and it is the place where we will display and manipulate the methods.</br>
 In the draw(), we have a ``switch(choice)`` statements, which checks the ``choice`` variable and takes appropriate action depending from the value stored in ``choice``.</br>
@@ -1480,7 +1484,7 @@ public void draw() {
 ```
 
 <a id = oscevent></a>
-###oscEvent
+### oscEvent
 This method is for automatic event detection. oscP5 locates functions inside your sketch and will link incoming OSC message to matching functions automatically. Incoming OSC messages can easily be captured within your sketch by implementing the oscEvent function.
 Because of the functionality of this, we are going to use this to control our robot using the muse headset.
 
@@ -1571,7 +1575,7 @@ To make sure that we are only writing in the Serial once, we are going to use ``
   *  <a href="#render">Render</a> - Used to draw everything
   *  <a href="#update">Update</a> - Makes necessary changes in the render method when an event occurs.
 
-###Fields
+### Fields
 These are the fields that we are using in the class.
 ```
     PApplet papplet;
@@ -1580,7 +1584,7 @@ These are the fields that we are using in the class.
     Slider rightMotorSlider;
 ```
 
-##Constructor
+## Constructor
 This is where we initialize controlP5 and the sliders. Also we are calling ``initialize()`` method here because we only want to call this method once at the start.
 ```
     RemoteControl(PApplet papplet) {
@@ -1608,7 +1612,7 @@ Here we are setting how and where we want the sliders to be displayed. We want t
 ```
 
 <a id = "render"></a>
-###render()
+### render()
 This method takes one parameter ``gear`` which is a character variable. This method is called from the main class in ``case 1:`` in the switch statement which is in the ``draw()``. It draws 2 sliders for left and right motors and show the current gear in text at the middle of the screen.
 ```
     public void render(char gear)
@@ -1626,10 +1630,10 @@ This method takes one parameter ``gear`` which is a character variable. This met
         papplet.fill(0);
         papplet.text("Menu",papplet.width/10,papplet.height/10 + 10);
     }
-````
+```
 
 <a id = "update"></a>
-###update()
+### update()
 This method takes 2 parameters: ``speed`` and ``leftspeed`` which are both float variables. This is what we are going to use for setting the values of the sliders (speed for right motor and leftspeed for left motor)
 
 ```
@@ -1654,7 +1658,7 @@ This method takes 2 parameters: ``speed`` and ``leftspeed`` which are both float
   *  <a href="#updatepetrol">updatePetrol</a> - Used to change the amount of petrol in the fuel tank meter
   *  <a href="#updatespeedo">updateSpeedo</a> - Used to show the speed of the robot when running
 
-###Fields
+### Fields
 These are the fields that we are going to use in this class.
 ```
     PApplet papplet;
@@ -1679,7 +1683,7 @@ These are the fields that we are going to use in this class.
     int rw;
 ```
 
-###Constructor
+### Constructor
 This is where we are initializing the variables that we declared above.
 ```
     HeadSet(PApplet papplet) {
@@ -1719,7 +1723,7 @@ This is where we are initializing the variables that we declared above.
 ```
 
 <a id="pass"></a>
-###pass
+### pass
 This method is called in the ``oscEvent()`` in the main. It takes two parameters: ``myPort`` which is the serial that we are using in order to communicate to arduino by bluetooth and ``var`` which is the ``passVar`` in the oscEvent() method.
 ```
 public void pass(Serial myPort,String var)
@@ -1729,7 +1733,7 @@ public void pass(Serial myPort,String var)
 ```
 
 <a id = "renderh"></a>
-###render()
+### render()
 This method is responsible for drawing the steering wheel, the fuel tank meter and the speedometer.
 ```
 public void render() {
