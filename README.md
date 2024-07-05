@@ -1,16 +1,3 @@
-### Video
-https://www.youtube.com/watch?v=sPjZSRCmt1U
-
-
-### Members:
-**Name:** Pamela Sabio</br>
-**Student number:** C14484542 DT282/2</br>
-**Contact:** c14484542@mydit.ie
-
-**Name:** Eryk Szlachetka</br>
-**Student number:** C14386641 DT282/2</br>
-**Contact:** c14386641@mydit.ie
-
 ### Table Of Contents
 * [Objective](#objective) </br>
 * [Resources](#useful-resources)</br>
@@ -579,6 +566,9 @@ When initializing the distance sensor we are passing three parameters: Echo Pin,
 
 The Arduino hardware has built-in support for serial communication on pins 0 and 1 hence why we are using these values when initializing the SoftwareSerial library.
 > SoftwareSerial BTserial(0, 1);
+
+### Video
+https://www.youtube.com/watch?v=sPjZSRCmt1U
 
 ### Global variables
 These are all the global variable that we are using in the program. We are setting these variables as global because we want all the functions to be able to access these variables.
